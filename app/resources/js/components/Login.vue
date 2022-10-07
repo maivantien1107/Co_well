@@ -1,77 +1,69 @@
-<template>
-    <div class="container h-100">
-        <div class="row h-100 align-items-center">
-            <div class="col-12 col-md-6 offset-md-3">
-                <div class="card shadow sm">
-                    <div class="card-body">
-                        <h1 class="text-center">Login</h1>
-                        <hr/>
-                        <form action="javascript:void(0)" class="row" method="post">
-                            <div class="col-12" v-if="Object.keys(validationErrors).length > 0">
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        <li v-for="(value, key) in validationErrors" :key="key">{{ value[0] }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group col-12">
-                                <label for="email" class="font-weight-bold">Email</label>
-                                <input type="text" v-model="auth.email" name="email" id="email" class="form-control">
-                            </div>
-                            <div class="form-group col-12 my-2">
-                                <label for="password" class="font-weight-bold">Password</label>
-                                <input type="password" v-model="auth.password" name="password" id="password" class="form-control">
-                            </div>
-                            <div class="col-12 mb-2">
-                                <vsButton type="submit" :disabled="processing" @click="login" class="btn btn-primary btn-block">
-                                    {{ processing ? "Please wait" : "Login" }}
-                                </vsButton>
-                            </div>
-                            <div class="col-12 text-center">
-                                <label>Don't have an account? <router-link :to="{name:'register'}">Register Now!</router-link></label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
 
-<script>
-import { mapActions } from 'vuex'
-export default {
-    name:"login",
-    data(){
-        return {
-            auth:{
-                email:"",
-                password:""
-            },
-            validationErrors:{},
-            processing:false
-        }
+<template>
+    <div id="login" class="mx-2 mt-36">
+      <div class="flex items-center border-2 rounded-xl py-20 mx-20 bg-gray-100">
+        <vs-col vs-w="6" class="flex justify-center items-center">
+          <img src="@/assets/img/logo.svg" alt="" class="w-80" />
+        </vs-col>
+        <vs-col vs-w="4" class="border-l-2 border-gray-200">
+          <div class="flex flex-col">
+            <div class="title text-center font-bold text-2xl">Đăng nhập quản trị viên</div>
+            <div class="flex flex-col justify-center items-center mt-4">
+              <vs-input label="Email" class="w-3/4 mt-6" v-model="email" />
+              <vs-input type="password" label="Mật khẩu" class="w-3/4 mt-4" v-model="password" />
+            </div>
+            <div class="flex justify-evenly items-center mt-8">
+              <vs-button @click="handleLogin">Đăng nhập</vs-button>
+              <span class="cursor-pointer hover:text-gray-600" @click="onResetPassword">Quên mật khẩu ?</span>
+            </div>
+          </div>
+        </vs-col>
+      </div>
+      <div class="dialog-reset">
+        <vs-popup title="Nhận email đă đăng kí trong hệ thống" :active.sync="isResetPassword" button-close-hidden>
+          <vs-input placeholder="Nhập địa chỉ email" v-model="email" />
+          <p class="text-red-400">
+            Chúng tôi sẽ gửi thư để lấy lại mật khẩu cho tài khoản của bạn vào email được nhập, nếu như email đã được đăng
+            kí. Hãy vui lòng nhập chính xác !
+          </p>
+          <div class="flex justify-end items-center mt-4">
+            <vs-button color="primary" icon="email" class="mr-6" @click="resetPassword({ email })">Gửi</vs-button>
+            <vs-button color="lightgray" @click="isResetPassword = false">Thoát</vs-button>
+          </div>
+        </vs-popup>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import { mapActions } from 'vuex'
+  export default {
+    name: 'Login',
+    data() {
+      return {
+        email: null,
+        password: null,
+        isResetPassword: false
+      }
     },
-    methods:{
-        ...mapActions({
-            signIn:'auth/login'
-        }),
-        async login(){
-            this.processing = true
-            await axios.get('/sanctum/csrf-cookie')
-            await axios.post('/login',this.auth).then(({data})=>{
-                this.signIn()
-            }).catch(({response})=>{
-                if(response.status===422){
-                    this.validationErrors = response.data.errors
-                }else{
-                    this.validationErrors = {}
-                    alert(response.data.message)
-                }
-            }).finally(()=>{
-                this.processing = false
-            })
-        },
+    methods: {
+      ...mapActions('auth', {
+        login: 'login',
+        resetPassword: 'resetPassword'
+      }),
+      async handleLogin() {
+        const { data } = await this.login({
+          email: this.email,
+          password: this.password
+        })
+        this.$socket.emit('admin', data)
+      },
+      onResetPassword() {
+        this.isResetPassword = true
+      }
+    },
+    created() {
+      if (this.$store.state.auth.token || localStorage.getItem('tokenAdmin')) this.$router.push('/admin-dashboard')
     }
-}
-</script>
+  }
+  </script>
