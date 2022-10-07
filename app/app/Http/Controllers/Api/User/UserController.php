@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Models\User;
+use Carbon\Carbon;
+use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,7 @@ class UserController extends BaseController
 {
     public function __construct()
     {
-        $this->customer = new User();
+        $this->user = new User();
     }
 
     public function login(Request $request)
@@ -32,9 +34,9 @@ class UserController extends BaseController
 
             $credentials = request(['phone', 'password']);
 
-            if (!Auth::guard('web')->attempt($credentials)) {
-                return $this->badRequest('Sai thông tin đăng nhập!');
-            }
+            // if (!Auth::guard('web')->attempt($credentials)) {
+            //     return $this->badRequest('Sai thông tin đăng nhập!');
+            // }
 
             $customer = User::where('phone', $request->phone)->first();
             if (!$customer->is_verified) {
@@ -75,7 +77,7 @@ class UserController extends BaseController
     {
         $validated = Validator::make($request->all(), [
             'name' => 'required|max:255',
-            'phone' => 'required|unique:customers,phone|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20',
+            'phone' => 'required|unique:users,phone|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20',
             'password' => 'required|max:255|min:6',
             'sex' => 'required',
         ]);
@@ -96,13 +98,12 @@ class UserController extends BaseController
             return $this->sendError('Số điện thoại không hợp lệ');
         }
 
-        $customer = $this->customer->firstOrCreate([
+        $customer = $this->user->firstOrCreate([
             'name' => $request['name'],
             'phone' => $request['phone'],
             'password' => Hash::make($request['password']),
             'sex' => $request['sex'],
         ]);
-
         return $this->withData($customer, 'Chúng tôi đã gửi mã xác nhận đến số điện thoại của bạn!', 201);
     }
 
@@ -145,7 +146,7 @@ class UserController extends BaseController
         if ($validated->fails()) {
             return $this->failValidator($validated);
         }
-        $customer = $this->customer->where('phone', $request['phone'])->where('is_verified', 1)->first() ?? null;
+        $customer = $this->user->where('phone', $request['phone'])->where('is_verified', 1)->first() ?? null;
         if ($customer) {
             $token = getenv("TWILIO_AUTH_TOKEN");
             $twilio_sid = getenv("TWILIO_SID");
@@ -201,7 +202,7 @@ class UserController extends BaseController
         if ($validated->fails()) {
             return $this->failValidator($validated);
         }
-        $customer = $this->customer->where('phone', $request['phone'])->firstOrFail();
+        $customer = $this->user->where('phone', $request['phone'])->firstOrFail();
         $customer->password = Hash::make($request['newPassword']);
         $customer->save();
 
