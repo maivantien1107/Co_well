@@ -1,4 +1,4 @@
-<template lang="html">
+<template >
 
    <div id="parentx">
     <vs-sidebar default-index="1" :parent="parent" :hiddenBackground="doNotClose" color="primary" class="sidebarx" spacer v-model="isSidebarActive" :click-not-close="doNotClose" >

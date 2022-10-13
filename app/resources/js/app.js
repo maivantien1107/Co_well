@@ -27,6 +27,7 @@ import '../sass/app.scss'
     store,
     render: h => h(App)
   }).$mount('#app')
+  import '@/assets/scss/style.scss'
 // const app = createApp({});
 
 // import ExampleComponent from './components/ExampleComponent.vue';

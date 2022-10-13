@@ -19,6 +19,7 @@
         "carbon": "^0.2.2",
         "material-icons": "^1.12.0",
         "vue": "^2.7.10",
+        "vue-chartjs": "^4.1.2",
         "vue-router": "^3.6.5",
         "vuesax": "^3.12.2",
         "vuex": "^3.6.2",

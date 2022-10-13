@@ -70,7 +70,7 @@
     },
     data() {
       return {
-        customerType: CUSTOMER_USER,
+        customerType: USER_TYPE,
         sexType: SEX_TYPE,
         srcPreviewAvatar: null
       }
