@@ -16,17 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
 Route::post('/login', [AdminController::class,'login'])->name('admin.login');
 Route::post('/reset-password', [AdminController::class, 'sendMail'])->name('admin.sendMailResetPassword');
 Route::put('/reset-password/{token}', [AdminController::class, 'resetPassword'])->name('admin.resetPassword');
 
 //user
-Route::post('/user-register', [UserController::class,'register'])->name("user.register");
+Route::post('/customer-register', [UserController::class,'register'])->name("user.register");
 Route::post('/user-active-account', [UserController::class,'activeAccount'])->name("user.activeAccount");
-Route::post('/user-login', [UserController::class,'login'])->name("user.login");
+Route::post('/customer-login', [UserController::class,'login'])->name("user.login");
 Route::post('/forget-password', [UserController::class,'forgetPassword'])->name('user.forgetPassword');
 Route::post('/new-password', [UserController::class,'newPassword'])->name('user.newPassword');
 Route::post('/verify-phone', [UserController::class,'verifiedPhone'])->name('user.verifiedPhone');

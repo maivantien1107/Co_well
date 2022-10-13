@@ -28,9 +28,9 @@ class UserController extends BaseController
                 'password' => 'required'
             ]);
 
-            if ($validated->fails()) {
-                return $this->failValidator($validated);
-            }
+            // if ($validated->fails()) {
+            //     return $this->failValidator($validated);
+            // }
 
             $credentials = request(['phone', 'password']);
 
@@ -39,9 +39,9 @@ class UserController extends BaseController
             // }
 
             $customer = User::where('phone', $request->phone)->first();
-            if (!$customer->is_verified) {
-                return $this->badRequest('Tài khoản chưa kích hoạt');
-            }
+            // if (!$customer->is_verified) {
+            //     return $this->badRequest('Tài khoản chưa kích hoạt');
+            // }
 
             if (!Hash::check($request->password, $customer->password, [])) {
                 throw new \Exception('Sai thông tin đăng nhập!');
@@ -89,14 +89,14 @@ class UserController extends BaseController
         $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
         $twilio = new Client($twilio_sid, $token);
         Log::info($request->get('phone'));
-        try {
-            $twilio->verify->v2->services($twilio_verify_sid)
-                ->verifications
-                ->create($request['phone'], "sms");
-        }
-        catch (\Exception $e) {
-            return $this->sendError('Số điện thoại không hợp lệ');
-        }
+        // try {
+        //     $twilio->verify->v2->services($twilio_verify_sid)
+        //         ->verifications
+        //         ->create($request['phone'], "sms");
+        // }
+        // catch (\Exception $e) {
+        //     return $this->sendError('Số điện thoại không hợp lệ');
+        // }
 
         $customer = $this->user->firstOrCreate([
             'name' => $request['name'],
@@ -127,7 +127,7 @@ class UserController extends BaseController
             return $this->sendError("Mã code không chính xác hoặc đã được sử dụng!");
         }
         if ($verification->valid) {
-            $user = tap(Customer::where('phone', $request['phone']))->update([
+            $user = tap(User::where('phone', $request['phone']))->update([
                 'is_verified' => true,
                 'phone_verified_at' => Carbon::now(),
             ]);

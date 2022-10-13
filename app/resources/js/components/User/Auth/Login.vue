@@ -1,8 +1,8 @@
 <template>
     <div id="login" class="flex py-20 border-b-4 items-center">
-      <div class="img-sub w-1/2 mx-10">
+      <!-- <div class="img-sub w-1/2 mx-10">
         <img src="@/assets/img/user/slide-1.png" alt="" class="w-full p-8" />
-      </div>
+      </div> -->
       <div class="form-container w-1/2 px-10 py-20 bg-gray-100 rounded">
         <p class="titile text-3xl font-bold text-red-600 mb-2">Đăng nhập</p>
         <label class="w-full block mb-6">
