@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ManagerController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Http\Request;
@@ -29,3 +30,14 @@ Route::post('/forget-password', [UserController::class,'forgetPassword'])->name(
 Route::post('/new-password', [UserController::class,'newPassword'])->name('user.newPassword');
 Route::post('/verify-phone', [UserController::class,'verifiedPhone'])->name('user.verifiedPhone');
 Route::get('/active-email/{token}', [UserController::class,'customerActiveMail'])->name('user.active-email');
+
+//manager admin
+Route::apiResource('user', ManagerController::class);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::middleware(['user'])->group(function () {
+        // Route::apiResource('user', ManagerController::class);
+    });
+    // Route::post('/dashboard', [DashboardController::class, 'dashboard'])->name("dashboard.dashboard");
+    
+        
+});

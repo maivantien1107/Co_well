@@ -30,30 +30,23 @@ const router = new Router({
                     title: `Register`
                 }
             },
+           
             {
-                path: '/admin',
-                name: 'admin',
-                // redirect: '/admin-dashboard',
-                component: () => import('@/layout/full/MainContainer.vue'),
-                // children: [
-                //   {
-                //     path: '/admin-dashboard',
-                //     name: 'admin-dashboard',
-                //     component: () => import('@/views/admin/Dashboard.vue'),
-                //     meta: {
-                //       rule: 'admin'
-                //     }
-                //   },
-                //   {
-                //     path: '/admin-user',
-                //     name: 'admin-user',
-                //     component: () => import('@/views/admin/ManagerUser.vue'),
-                //     meta: {
-                //       rule: 'user'
-                //     }
-                //   },
-                // ]
+              path: '/admin',
+              name: 'admin',
+              redirect: '/admin-dashboard',
+              component: () => import('@/views/admin/UserManager.vue'),
+              children: [
+                {
+                  path: '/admin-user',
+                  name: 'admin-user',
+                  component: () => import('@/views/admin/UserManager.vue'),
+                  meta: {
+                    rule: 'user'
+                  }
                 },
+              ]
+            },
                 {
                 path: '',
             component: () => import('@/layout/full/MainContainer.vue'),
@@ -125,86 +118,7 @@ const router = new Router({
                     index: 11,
                     component: () => import('@/views/components/vuesax/divider/divider.vue')
                 },
-                {
-                    path: '/dropdown',
-                    name: 'Dropdown',
-                    index: 12,
-                    component: () => import('@/views/components/vuesax/dropdown/dropdown.vue')
-                },
-                {
-                    path: '/input',
-                    name: 'Input',
-                    index: 13,
-                    component: () => import('@/views/components/vuesax/input/input.vue')
-                },
-                {
-                    path: '/list',
-                    name: 'List',
-                    index: 14,
-                    component: () => import('@/views/components/vuesax/list/list.vue')
-                },
-                {
-                    path: '/loading',
-                    name: 'Loading',
-                    index: 15,
-                    component: () => import('@/views/components/vuesax/loading/loading.vue')
-                },{
-                    path: '/navbar',
-                    name: 'Navbar',
-                    index: 16,
-                    component: () => import('@/views/components/vuesax/navbar/navbar.vue')
-                },
-                {
-                    path: '/notification',
-                    name: 'Notification',
-                    index: 17,
-                    component: () => import('@/views/components/vuesax/notification/notification.vue')
-                },{
-                    path: '/number-input',
-                    name: 'Number input',
-                    index: 18,
-                    component: () => import('@/views/components/vuesax/number-input/number-input.vue')
-                },
-                {
-                    path: '/pagination',
-                    name: 'Pagination',
-                    index: 19,
-                    component: () => import('@/views/components/vuesax/pagination/pagination.vue')
-                },{
-                    path: '/popup',
-                    name: 'Popup',
-                    index: 20,
-                    component: () => import('@/views/components/vuesax/popup/popup.vue')
-                },
-                {
-                    path: '/progress',
-                    name: 'Progress',
-                    index: 21,
-                    component: () => import('@/views/components/vuesax/progress/progress.vue')
-                },
-                {
-                    path: '/radio',
-                    name: 'Radio',
-                    index: 22,
-                    component: () => import('@/views/components/vuesax/radio/radio.vue')
-                },
-                {
-                    path: '/switch',
-                    name: 'Switch',
-                    index: 26,
-                    component: () => import('@/views/components/vuesax/switch/switch.vue')
-                },
-                {
-                    path: '/tabs',
-                    name: 'Tabs',
-                    index: 28,
-                    component: () => import('@/views/components/vuesax/tabs/tabs.vue')
-                },{
-                    path: '/textarea',
-                    name: 'Textarea',
-                    index: 29,
-                    component: () => import('@/views/components/vuesax/textarea/textarea.vue')
-                }
+                
 
             ]
 		},
@@ -218,37 +132,38 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
-    if (!to.meta || !to.meta.rule || to.meta.rule == 'user') {
-      return next()
-    }
-    if (to.meta && to.meta.rule && to.meta.rule !== 'user' && !store.state.auth.profile.type) {
-      await store.dispatch('auth/getProfile')
-    }
-    if (to.meta && to.meta.rule && to.meta.rule == 'admin' && store.state.auth.profile.type !== 1) {
-      store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
-      if (from.path.search('admin') != -1) {
-        store.dispatch('auth/setToken')
-        return {
-          path: '/admin-login'
-        }
-      }
-      store.dispatch('clientAuth/setToken')
+  if (!to.meta || !to.meta.rule || to.meta.rule == 'user') {
+    return next()
+  }
+  if (to.meta && to.meta.rule && to.meta.rule !== 'user' ) {
+    await store.dispatch('auth/getProfile')
+  }
+  if (to.meta && to.meta.rule && to.meta.rule == 'admin' && store.state.auth.profile.type !== 1) {
+    store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
+    if (from.path.search('admin') != -1) {
+      store.dispatch('auth/setToken')
       return {
-        path: '/login'
+        path: '/admin-login'
       }
-    } else if (to.meta && to.meta.rule && to.meta.rule == 'editor' && store.state.auth.profile.type === 3) {
-      store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
-      if (from.path.search('admin') != -1) {
-        return {
-          path: '/admin'
-        }
-      }
-      return {
-        path: '/home'
-      }
-    } else {
-      next()
     }
-  })
+    store.dispatch('clientAuth/setToken')
+    return {
+      path: '/login'
+    }
+  } else if (to.meta && to.meta.rule && to.meta.rule == 'editor' && store.state.auth.profile.type === 3) {
+    store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
+    if (from.path.search('admin') != -1) {
+      return {
+        path: '/admin'
+      }
+    }
+    return {
+      path: '/home'
+    }
+  } else {
+    next()
+  }
+})
+
   
 export default router

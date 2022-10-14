@@ -1,6 +1,6 @@
 <template>
     <div class="customer-detail">
-      <vs-row class="flex items-end">
+      <!-- <vs-row class="flex items-end">
         <input type="file" class="hidden" ref="uploadAvatar" @change="handleUploadAvatar" />
         <div class="avatar w-full flex flex-col items-center justify-center">
           <vs-tooltip text="Bấm để thay đổi ảnh">
@@ -14,7 +14,7 @@
             {{ srcPreviewAvatar ? 'Thay đổi ảnh khác' : 'Tải ảnh đại diện' }}</vs-button
           >
         </div>
-      </vs-row>
+      </vs-row> -->
       <vs-input class="mb-2 w-1/6" label="ID" placeholder="id" v-if="customer.id" :value="customer.id" disabled />
       <vs-input class="mb-3 w-full" label="Tên" placeholder="Tên" v-model="customer.name" />
       <vs-row>
@@ -64,7 +64,7 @@
   <script>
   import { USER_TYPE, SEX_TYPE } from '@/constants/user'
   export default {
-    name: 'customer-detail',
+    name: 'UserDetail',
     props: {
       customer: Object
     },

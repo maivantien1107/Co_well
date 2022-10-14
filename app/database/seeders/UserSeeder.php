@@ -41,16 +41,19 @@ class UserSeeder extends Seeder
             [
                 'name' => fake()->name(),
                 'phone' => fake()->phoneNumber(),
+                'sex'=>'1',
                 'email' => 'admin@example.com',
             ],
             [
                 'name' => fake()->name(),
                 'phone' => fake()->phoneNumber(),
-                'email' => 'superadmin@example.com',
+                'sex'=>'1',
+                'email' => 'super@example.com',
             ],
             [
                 'name' => fake()->name(),
                 'phone' => fake()->phoneNumber(),
+                'sex'=>'1',
                 'email' => 'user@example.com',
             ],
         ];

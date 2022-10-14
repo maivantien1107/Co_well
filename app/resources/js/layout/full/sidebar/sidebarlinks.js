@@ -2,120 +2,105 @@
 	{
 		url:"/starterkit",
 		name:"Starterkit",
-		icon:"favorite_border"
+		icon:"favorite_border",
+		index:1
 	},
 	{
 		url: "/alert",
 		name: "Alert",
-		icon:"error_outline"
+		icon:"error_outline",
+		index:2
 	},
 	{
 		url: "/avatar",
 		name: "Avatar",
-		icon:"tag_faces"
+		icon:"tag_faces",
+		index:17
 	},
 	{
 		url: "/breadcrumb",
 		name: "Breadcrumb",
-		icon:"compare_arrows"
+		icon:"compare_arrows",
+		index:3
 	},
 	{
 		url: "/buttons",
 		name: "Buttons",
-		icon:"dns"
+		icon:"dns",
+		index:4
 	},
 	{
 		url: "/cards",
 		name: "Cards",
-		icon:"credit_card"
+		icon:"credit_card",
+		index:5
 	},
 	{
 		url: "/checkbox",
 		name: "Checkboxes",
-		icon:"all_out"
+		icon:"all_out",
+		index:6
 	},
 	{
 		url: "/collapse",
 		name: "Collapse",
-		icon:"aspect_ratio"
+		icon:"aspect_ratio",
+		index:7
 	},
 	{
 		url: "/dialog",
 		name: "Dialog",
-		icon:"flip_to_front"
+		icon:"flip_to_front",
+		index:8
 	},
 	{
 		url: "/divider",
 		name: "Divider",
-		icon:"line_weight"
+		icon:"line_weight",
+		index:9
 	},
 	{
 		url: "/dropdown",
 		name: "Dropdown",
-		icon:"rounded_corner"
+		icon:"rounded_corner",
+		index:10
 	},
 	{
 		url: "/input",
 		name: "Input",
-		icon:"aspect_ratio"
+		icon:"aspect_ratio",
+		index:11
 	},
 	{
 		url: "/list",
 		name: "List",
-		icon:"subject"
+		icon:"subject",
+		index:12
 	},
 	{
 		url: "/loading",
 		name: "Loading",
-		icon:"track_changes"
+		icon:"track_changes",
+		index:13
 	},
 	{
 		url: "/navbar",
 		name: "Navbar",
-		icon:"view_quilt"
+		icon:"view_quilt",
+		index:14
 	},
 	{
 		url: "/notification",
 		name: "Notification",
-		icon:"picture_in_picture_alt"
+		icon:"picture_in_picture_alt",
+		index:15
 	},
 	{
 		url: "/number-input",
 		name: "Number input",
-		icon:"swap_calls"
+		icon:"swap_calls",
+		index:16
 	},
-	{
-		url: "/pagination",
-		name: "Pagination",
-		icon:"unfold_more"
-	},
-	{
-		url: "/popup",
-		name: "Popup",
-		icon:"vibration"
-	},
-	{
-		url: "/progress",
-		name: "Progress",
-		icon:"sort"
-	},
-	{
-		url: "/radio",
-		name: "Radio",
-		icon:"gps_fixed"
-	},
-	{
-		url: "/switch",
-		name: "Switch",
-		icon:"graphic_eq"
-	},{
-		url: "/tabs",
-		name: "Tabs",
-		icon:"gradient"
-	},{
-		url: "/textarea",
-		name: "Textarea",
-		icon:"crop_landscape"
-	}
+	
 
 ]

@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import auth from '@/store/auth.js'
 import app from '@/store/common/app.js'
 import clientAuth from '@/store/user/auth.js'
+import user from '@/store/admin/user.js'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     // todo: moduleTodo
     auth,
     clientAuth,
-    app
+    app,
+    user
   }
 })
