@@ -35,7 +35,7 @@ const router = new Router({
               path: '/admin',
               name: 'admin',
               redirect: '/admin-dashboard',
-              component: () => import('@/views/admin/UserManager.vue'),
+              component: () => import('@/layout/full/MainContainer.vue'),
               children: [
                 {
                   path: '/admin-user',
