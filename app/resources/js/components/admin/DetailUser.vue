@@ -15,47 +15,48 @@
           >
         </div>
       </vs-row> -->
-      <vs-input class="mb-2 w-1/6" label="ID" placeholder="id" v-if="customer.id" :value="customer.id" disabled />
-      <vs-input class="mb-3 w-full" label="Tên" placeholder="Tên" v-model="customer.name" />
+      <vs-input class="mb-2 w-1/6" label="ID" placeholder="id" v-if="user.id" :value="user.id" disabled />
+      <vs-input class="mb-3 w-full" label="Tên" placeholder="Tên" v-model="user.name" />
       <vs-row>
         <label class="ml-1">Giới tính:</label>
         <vs-radio
           class="mx-2"
           v-for="(name, index) of sexType"
           :key="index"
-          v-model="customer.sex"
-          vs-name="customer.sex"
+          v-model="user.sex"
+          vs-name="user.sex"
           :vs-value="index"
           >{{ name }}</vs-radio
         >
       </vs-row>
-      <vs-input class="mb-4 mt-2 w-full" label="Số điện thoại" placeholder="Số điện thoại" v-model="customer.phone" />
-      <vs-checkbox class="mb-4" v-if="customer.id" v-model="customer.is_verified" disabled>Đã xác thực</vs-checkbox>
-      <vs-input
+      <vs-input class="mb-4 mt-2 w-full" label="Số điện thoại" placeholder="Số điện thoại" v-model="user.phone" />
+      <vs-input class="mb-4 mt-2 w-full" label="Email" placeholder="Email" v-model="user.email" />
+      <vs-checkbox class="mb-4" v-if="user.id" v-model="user.is_verified" disabled>Đã xác thực</vs-checkbox>
+      <!-- <vs-input
         class="mb-4 w-full"
         label="Mật khẩu"
         placeholder="Mật khẩu"
-        v-if="!customer.id"
-        v-model="customer.password"
-      />
+        v-if="!user.id"
+        v-model="user.password"
+      /> -->
       <vs-row>
         <label class="ml-1">Loại tài khoản:</label>
         <vs-radio
           class="mx-2"
-          v-for="(name, index) of customerType"
+          v-for="(name, index) of userType"
           :key="index"
-          v-model="customer.customer_type"
-          vs-name="customer.customer_type"
+          v-model="user.customer_type"
+          vs-name="user.customer_type"
           :vs-value="index"
           >{{ name }}</vs-radio
         >
       </vs-row>
       <div class="mt-4 flex justify-end">
-        <vs-button color="success" icon="assignment" v-if="customer.id" @click="$emit('actionEdit')">Lưu</vs-button>
-        <vs-button color="danger" icon="delete" v-if="customer.id" class="mx-4" @click="$emit('actionDelete')"
+        <vs-button color="success" icon="assignment" v-if="user.id" @click="$emit('actionEdit')">Lưu</vs-button>
+        <vs-button color="danger" icon="delete" v-if="user.id" class="mx-4" @click="$emit('actionDelete')"
           >Xoá</vs-button
         >
-        <vs-button color="primary" icon="person_add" class="mr-2" v-else @click="$emit('actionCreate')">Tạo</vs-button>
+        <vs-button color="primary" icon="person_add" class="mr-2" v-else @click="$emit('actionCreate')">Chỉnh sửa</vs-button>
         <vs-button color="lightgray" @click="$emit('clearEvent')">Thoát</vs-button>
       </div>
     </div>
@@ -66,11 +67,11 @@
   export default {
     name: 'UserDetail',
     props: {
-      customer: Object
+      user: Object
     },
     data() {
       return {
-        customerType: USER_TYPE,
+        userType: USER_TYPE,
         sexType: SEX_TYPE,
         srcPreviewAvatar: null
       }
@@ -78,7 +79,7 @@
     methods: {
       handleUploadAvatar(e) {
         if (e.target.files[0]) {
-          this.customer.avatar = e.target.files[0]
+          this.user.avatar = e.target.files[0]
           this.srcPreviewAvatar = URL.createObjectURL(e.target.files[0])
         }
       }

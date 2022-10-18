@@ -72,7 +72,7 @@
 
 <script>
 export default {
-	name : 'Navbar',
+	name : 'Header',
   props: {
       topbarColor: {
           type: String,

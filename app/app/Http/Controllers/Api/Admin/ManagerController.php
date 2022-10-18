@@ -107,8 +107,35 @@ class ManagerController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = $this->user->findOrFail($id);
+        $validateRequest = [
+            'name' => 'required|max:255',
+            'type' => 'required',
+            'sex'=>'required',
+            'phone'=>'',
+            'email' => 'email|required|unique:users,email|max:255',
+
+        ];
+        
+        $validated = Validator::make($request->all(), $validateRequest);
+        if ($user->type == 1 && Auth::user()->id != $id) {
+            return $this->unauthorizedResponse();
+        }
+        
+        if ($validated->fails()) {
+            return $this->failValidator($validated);
+        }
+        $userupdate = $user->update([
+            'name' => $request['name'],
+            'type' => $request['type'],
+            'sex'=>$request['sex'],
+            'phone'=>$request['phone'],
+            'email'=>$request['email'],
+        ]);
+
+        return $this->withData($user, 'User has been updated!');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -118,6 +145,6 @@ class ManagerController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        
     }
 }

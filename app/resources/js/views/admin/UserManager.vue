@@ -53,7 +53,7 @@
                 {{ data[index].phone }}
               </vs-td>
               <vs-td :data="data[index].role_name">
-                {{ data[index].role_name | userRole }}
+                {{ data[index].role_name }}
               </vs-td>
               <vs-td>
                 <span class="material-icons mr-2 text-blue-600 hover:text-black" @click="onEdit(prop.id)">edit</span>
@@ -68,20 +68,20 @@
         :active.sync="isShowDialog"
         button-close-hidden
       >
-        <!-- <UserDetail
+        <UserDetail
           :user="user"
           @clearEvent="clearEvent"
           @actionCreate="actionCreate"
           @actionEdit="actionEdit"
           @actionDelete="onDelete"
-        /> -->
+        />
       </vs-popup>
     </div>
   </template>
   
   <script>
   import { mapActions } from 'vuex'
-//   import UserDetail from '@/components/admin/DetailUser.vue'
+  import UserDetail from '@/components/admin/DetailUser.vue'
   export default {
     name: 'UserManagePage',
     data() {
@@ -96,7 +96,7 @@
       }
     },
     components: {
-    //   UserDetail
+      UserDetail
     },
     methods: {
       ...mapActions('user', {

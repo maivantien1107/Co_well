@@ -50,10 +50,7 @@ const router = new Router({
                 {
                 path: '',
             component: () => import('@/layout/full/MainContainer.vue'),
-            // ======================
-            // Theme routes / pages
-            // ======================
-
+           
             children: [
                 {
                     path: '/',
@@ -138,29 +135,30 @@ router.beforeEach(async (to, from, next) => {
   if (to.meta && to.meta.rule && to.meta.rule !== 'user' ) {
     await store.dispatch('auth/getProfile')
   }
-  if (to.meta && to.meta.rule && to.meta.rule == 'admin' && store.state.auth.profile.type !== 1) {
-    store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
-    if (from.path.search('admin') != -1) {
-      store.dispatch('auth/setToken')
-      return {
-        path: '/admin-login'
-      }
-    }
-    store.dispatch('clientAuth/setToken')
-    return {
-      path: '/login'
-    }
-  } else if (to.meta && to.meta.rule && to.meta.rule == 'editor' && store.state.auth.profile.type === 3) {
-    store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
-    if (from.path.search('admin') != -1) {
-      return {
-        path: '/admin'
-      }
-    }
-    return {
-      path: '/home'
-    }
-  } else {
+  // if (to.meta && to.meta.rule && to.meta.rule == 'admin' && store.state.auth.profile.type !== 1) {
+  //   store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
+  //   if (from.path.search('admin') != -1) {
+  //     store.dispatch('auth/setToken')
+  //     return {
+  //       path: '/login'
+  //     }
+  //   }
+  //   store.dispatch('clientAuth/setToken')
+  //   return {
+  //     path: '/login'
+  //   }
+  // } else if (to.meta && to.meta.rule && to.meta.rule == 'editor' && store.state.auth.profile.type === 3) {
+  //   store.dispatch('app/setErrorNotification', 'Bạn không có quyền truy cập trang này !')
+  //   if (from.path.search('admin') != -1) {
+  //     return {
+  //       path: '/admin'
+  //     }
+  //   }
+  //   return {
+  //     path: '/home'
+  //   }
+  // } 
+  else {
     next()
   }
 })
