@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Api\BaseController;
 use App\Models\User;
-use Cartalyst\Support\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Support\Facades\Validator;
+use SMTPValidateEmail\Validator as SmtpEmailValidator;
 class ManagerController extends BaseController
 {
     public function __construct(Request $request)
@@ -54,7 +54,7 @@ class ManagerController extends BaseController
      */
     public function store(Request $request)
     {
-        if (!Gate::allows('isAdmin')) {
+        if (!Gate::allows('isSuperAdmin')) {
             return $this->unauthorizedResponse();
         }
         $validated = Validator::make($request->all(), [
@@ -62,7 +62,6 @@ class ManagerController extends BaseController
             'email' => 'email|required|unique:users,email|max:255',
             'password' => 'required|max:255|min:6',
             'type' => 'required',
-            'avatar' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         if ($validated->fails()) {
             return $this->failValidator($validated);
@@ -71,18 +70,14 @@ class ManagerController extends BaseController
         if (!$checkMailValid) {
             return $this->sendError('This email is not valid!');
         }
-        if ($request->hasFile('avatar')) {
-            $feature_image_name= $request['avatar']->getClientOriginalName();
-            $path = $request->file('avatar')->storeAs('public/photos/personnel', $feature_image_name);
-            $linkAvatar = url('/') . Storage::url($path);
             $user = $this->user->create([
                 'name' => $request['name'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
-                'type' => $request['type'],
-                'avatar' => $linkAvatar,
+                'sex' => $request['sex'],
+                'phone'=>$request['phone']
             ]);
-        }
+            $user->roles()->attach($request['role_id']);
 
         return $this->withData($user, 'Create user successfully!', 201);
     }
@@ -94,8 +89,27 @@ class ManagerController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
+    {    
+        $user = User::select([
+            'users.id',
+            'users.name',
+            'email',
+            'phone',
+            'sex',
+            'users.permissions',
+            'roles.name AS role_name',
+            'role_id',
+            'last_login',
+            'phone_verified_at',
+            'users.created_at',
+            'users.updated_at',
+            'phone_verified_at',
+        ])
+        ->join('role_users','users.id','=','user_id')
+        ->join('roles','role_id','=','roles.id')
+        ->where('users.id',$id)
+        ->first();
+        return $this->withData($user, 'User Detail');
     }
 
     /**
@@ -107,32 +121,31 @@ class ManagerController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        $user = $this->user->findOrFail($id);
+        $user = User::find($id);
         $validateRequest = [
             'name' => 'required|max:255',
-            'type' => 'required',
+            'role_id' => 'required',
             'sex'=>'required',
             'phone'=>'',
-            'email' => 'email|required|unique:users,email|max:255',
+            'email' => 'email|required|max:255',
 
         ];
         
         $validated = Validator::make($request->all(), $validateRequest);
-        if ($user->type == 1 && Auth::user()->id != $id) {
-            return $this->unauthorizedResponse();
-        }
+        // if (Sentinel::user()->getType($user->id) == 2 && Auth::user()->id != $id) {
+        //     return $this->unauthorizedResponse();
+        // }
         
         if ($validated->fails()) {
             return $this->failValidator($validated);
         }
-        $userupdate = $user->update([
-            'name' => $request['name'],
-            'type' => $request['type'],
-            'sex'=>$request['sex'],
-            'phone'=>$request['phone'],
-            'email'=>$request['email'],
-        ]);
-
+       
+            $user->name = $request['name'];
+            $user->sex=$request['sex'];
+            $user->phone=$request['phone'];
+            $user->email=$request['email'];
+            $user->save();
+            $user->roles()->sync([$request['role_id']]);
         return $this->withData($user, 'User has been updated!');
     }
 
@@ -145,6 +158,21 @@ class ManagerController extends BaseController
      */
     public function destroy($id)
     {
-        
+        if (!Gate::allows('isSuperAdmin')) {
+            return $this->unauthorizedResponse();
+        }
+        $user = $this->user->findOrFail($id);
+        $user->delete();
+
+        return $this->withSuccessMessage('User has been deleted!');
+    }
+
+    
+    public function checkValidatedMail($email)
+    {
+        $sender    = 'maivantien1107@gmail.com';
+        $validator = new SmtpEmailValidator($email, $sender);
+        $results   = $validator->validate();
+        return $results[$email];
     }
 }

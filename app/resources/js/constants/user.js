@@ -4,9 +4,9 @@ const SEX_TYPE = {
     2: 'Khác'
   };
   const USER_TYPE ={
-    0: 'user',
+    2: 'user',
     1: 'admin',
-    2: 'superadmin',
+    3: 'superadmin',
 };
   
   export {  SEX_TYPE, USER_TYPE }

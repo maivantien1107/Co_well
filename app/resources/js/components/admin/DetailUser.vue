@@ -1,20 +1,5 @@
 <template>
     <div class="customer-detail">
-      <!-- <vs-row class="flex items-end">
-        <input type="file" class="hidden" ref="uploadAvatar" @change="handleUploadAvatar" />
-        <div class="avatar w-full flex flex-col items-center justify-center">
-          <vs-tooltip text="Bấm để thay đổi ảnh">
-            <img
-              class="w-36 mb-2 rounded-full cursor-pointer"
-              :src="srcPreviewAvatar || customer.avatar"
-              @click="$refs.uploadAvatar.click()"
-            />
-          </vs-tooltip>
-          <vs-button icon="add_a_photo" size="normal" class="mb-2" @click="$refs.uploadAvatar.click()">
-            {{ srcPreviewAvatar ? 'Thay đổi ảnh khác' : 'Tải ảnh đại diện' }}</vs-button
-          >
-        </div>
-      </vs-row> -->
       <vs-input class="mb-2 w-1/6" label="ID" placeholder="id" v-if="user.id" :value="user.id" disabled />
       <vs-input class="mb-3 w-full" label="Tên" placeholder="Tên" v-model="user.name" />
       <vs-row>
@@ -45,8 +30,8 @@
           class="mx-2"
           v-for="(name, index) of userType"
           :key="index"
-          v-model="user.customer_type"
-          vs-name="user.customer_type"
+          v-model="user.role_id"
+          vs-name="user.role_id"
           :vs-value="index"
           >{{ name }}</vs-radio
         >
@@ -56,7 +41,7 @@
         <vs-button color="danger" icon="delete" v-if="user.id" class="mx-4" @click="$emit('actionDelete')"
           >Xoá</vs-button
         >
-        <vs-button color="primary" icon="person_add" class="mr-2" v-else @click="$emit('actionCreate')">Chỉnh sửa</vs-button>
+        <vs-button color="primary" icon="person_add" class="mr-2" v-else @click="$emit('actionCreate')">Thêm mới</vs-button>
         <vs-button color="lightgray" @click="$emit('clearEvent')">Thoát</vs-button>
       </div>
     </div>
@@ -77,12 +62,6 @@
       }
     },
     methods: {
-      handleUploadAvatar(e) {
-        if (e.target.files[0]) {
-          this.user.avatar = e.target.files[0]
-          this.srcPreviewAvatar = URL.createObjectURL(e.target.files[0])
-        }
-      }
     }
   }
   </script>

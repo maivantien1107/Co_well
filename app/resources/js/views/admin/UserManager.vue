@@ -57,7 +57,7 @@
               </vs-td>
               <vs-td>
                 <span class="material-icons mr-2 text-blue-600 hover:text-black" @click="onEdit(prop.id)">edit</span>
-                <span class="material-icons text-red-400 hover:text-black" @click="onDelete()">delete_forever</span>
+                <span class="material-icons text-red-400 hover:text-black" @click="onDelete(prop.id)">delete_forever</span>
               </vs-td>
             </vs-tr>
           </template>
@@ -76,6 +76,7 @@
           @actionDelete="onDelete"
         />
       </vs-popup>
+      
     </div>
   </template>
   
@@ -114,13 +115,13 @@
         this.isCreate = false
         this.isShowDialog = true
       },
-      onDelete() {
+      onDelete(id) {
         this.$vs.dialog({
           type: 'confirm',
           color: 'danger',
           title: 'Xác nhận xoá ?',
           text: 'Bạn có chắc chắn muốn xoá người dùng này ?',
-          accept: this.actionDelete,
+          accept: this.actionDelete(id),
           acceptText: 'Xoá',
           cancelText: 'Thoát'
         })
@@ -148,8 +149,8 @@
         await this.fetchUsers()
         this.clearEvent()
       },
-      async actionDelete() {
-        await this.deleteUser(this.selected.id)
+      async actionDelete(id) {
+        await this.deleteUser(id)
         await this.fetchUsers()
         this.clearEvent()
       },

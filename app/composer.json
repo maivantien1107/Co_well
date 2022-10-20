@@ -13,7 +13,8 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "tomfordrumm/jwt-auth": "dev-develop",
-        "twilio/sdk": "^6.42"
+        "twilio/sdk": "^6.42",
+        "zytzagoo/smtp-validate-email": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
