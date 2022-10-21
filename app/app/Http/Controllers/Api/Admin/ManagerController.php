@@ -14,6 +14,8 @@ class ManagerController extends BaseController
     {
         $this->user = new User();
     }
+
+ 
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +23,9 @@ class ManagerController extends BaseController
      */
     public function index()
     {
-        
+        if (Gate::allows('isUser')) {
+            return $this->unauthorizedResponse();
+        }
         $users = User::select([
             'users.id',
             'users.name',
@@ -90,6 +94,10 @@ class ManagerController extends BaseController
      */
     public function show($id)
     {    
+        if (Gate::allows('isUser')) {
+            return $this->unauthorizedResponse();
+        }
+        
         $user = User::select([
             'users.id',
             'users.name',
@@ -121,6 +129,9 @@ class ManagerController extends BaseController
      */
     public function update(Request $request, $id)
     {
+        if (!Gate::allows('isSuperAdmin')) {
+            return $this->unauthorizedResponse();
+        }
         $user = User::find($id);
         $validateRequest = [
             'name' => 'required|max:255',

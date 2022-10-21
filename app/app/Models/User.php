@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
@@ -70,7 +71,7 @@ class User extends Authenticatable implements JWTSubject
         );
     }
     public function getType($id){
-        $type = $this->roleUsers()->where('user_id',$id)->first();
+        $type = DB::table('role_users')->where('user_id',$id)->first();
         return $type->role_id;
     }
     
