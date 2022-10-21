@@ -32,10 +32,15 @@ Route::post('/verify-phone', [UserController::class,'verifiedPhone'])->name('use
 Route::get('/active-email/{token}', [UserController::class,'customerActiveMail'])->name('user.active-email');
 
 //manager admin
-Route::apiResource('user', ManagerController::class);
+// Route::group(['middleware'=>['jwt.auth:Admin'],], function(){
+//     Route::apiResource('user', ManagerController::class)->middleware('jwt.auth:Admin');
+// });
+Route::apiResource('user', ManagerController::class)->middleware('jwt.auth:1');
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::middleware(['user'])->group(function () {
+   
+    Route::middleware(['admin'])->group(function () {
         // Route::apiResource('user', ManagerController::class);
+        Route::post('/logout', [UserController::class,'logout'])->name("user.logout");
     });
     // Route::post('/dashboard', [DashboardController::class, 'dashboard'])->name("dashboard.dashboard");
     

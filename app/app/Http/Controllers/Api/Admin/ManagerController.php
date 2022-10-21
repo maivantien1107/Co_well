@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use SMTPValidateEmail\Validator as SmtpEmailValidator;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
 class ManagerController extends BaseController
 {
-    public function __construct(Request $request)
+    public function __construct()
     {
         $this->user = new User();
     }
@@ -23,9 +25,6 @@ class ManagerController extends BaseController
      */
     public function index()
     {
-        if (Gate::allows('isUser')) {
-            return $this->unauthorizedResponse();
-        }
         $users = User::select([
             'users.id',
             'users.name',
@@ -57,15 +56,15 @@ class ManagerController extends BaseController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        if (!Gate::allows('isSuperAdmin')) {
-            return $this->unauthorizedResponse();
-        }
+    { 
+        
         $validated = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'email|required|unique:users,email|max:255',
             'password' => 'required|max:255|min:6',
-            'type' => 'required',
+            'sex' => 'required',
+            'role_id' => 'required',
+            'phone' => 'required',
         ]);
         if ($validated->fails()) {
             return $this->failValidator($validated);
@@ -92,12 +91,9 @@ class ManagerController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {    
-        if (Gate::allows('isUser')) {
-            return $this->unauthorizedResponse();
-        }
-        
+    public function show(Request $request, $id)
+    {
+        // $user = JWTAuth::toUser($request->input('token')); 
         $user = User::select([
             'users.id',
             'users.name',
@@ -117,6 +113,7 @@ class ManagerController extends BaseController
         ->join('roles','role_id','=','roles.id')
         ->where('users.id',$id)
         ->first();
+        // $type=$this->user->getType($user->id);
         return $this->withData($user, 'User Detail');
     }
 
@@ -129,9 +126,6 @@ class ManagerController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        if (!Gate::allows('isSuperAdmin')) {
-            return $this->unauthorizedResponse();
-        }
         $user = User::find($id);
         $validateRequest = [
             'name' => 'required|max:255',
@@ -143,9 +137,6 @@ class ManagerController extends BaseController
         ];
         
         $validated = Validator::make($request->all(), $validateRequest);
-        // if (Sentinel::user()->getType($user->id) == 2 && Auth::user()->id != $id) {
-        //     return $this->unauthorizedResponse();
-        // }
         
         if ($validated->fails()) {
             return $this->failValidator($validated);
@@ -169,9 +160,6 @@ class ManagerController extends BaseController
      */
     public function destroy($id)
     {
-        if (!Gate::allows('isSuperAdmin')) {
-            return $this->unauthorizedResponse();
-        }
         $user = $this->user->findOrFail($id);
         $user->delete();
 

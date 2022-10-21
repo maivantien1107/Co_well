@@ -59,7 +59,7 @@ class AdminController extends BaseController
     }
     public function logout()
     {
-        auth()->user()->currentAccessToken()->delete();
+        auth()->logout();
         return $this->withSuccessMessage('Log out!');
     }
 

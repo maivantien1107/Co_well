@@ -24,6 +24,10 @@
               />
               <!-- <span class="text-red-600 text-sm mx-2">{{ errors.first('phone') }}</span> -->
             </label>
+            <div class="form-group col-12 my-2">
+                                <label for="email" class="font-weight-bold">Email</label>
+                                <input type="text" name="email" v-model="customer.email" id="email" placeholder="Enter Email" class="form-control">
+                            </div>
             <div class="sex-select flex justify-start items-center mb-6">
               <label class="mr-4 font-bold">Giới tính:</label>
               <vs-radio v-for="(sexType, index) of sexTypes" :key="index" class="mx-2" color="danger" vs-name="sexType" :vs-value="index" v-model="customer.sex">{{ sexType }}</vs-radio>

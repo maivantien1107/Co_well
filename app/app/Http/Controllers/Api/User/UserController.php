@@ -28,15 +28,15 @@ class UserController extends BaseController
                 'password' => 'required'
             ]);
 
-            // if ($validated->fails()) {
-            //     return $this->failValidator($validated);
-            // }
+            if ($validated->fails()) {
+                return $this->failValidator($validated);
+            }
 
             $credentials = request(['phone', 'password']);
 
-            // if (!Auth::guard('web')->attempt($credentials)) {
-            //     return $this->badRequest('Sai thông tin đăng nhập!');
-            // }
+            if (!Auth::guard('web')->attempt($credentials)) {
+                return $this->badRequest('Sai thông tin đăng nhập!');
+            }
 
             $customer = User::where('phone', $request->phone)->first();
             // if (!$customer->is_verified) {
@@ -64,7 +64,7 @@ class UserController extends BaseController
 
     public function logout()
     {
-        auth()->user()->currentAccessToken()->delete();
+        auth()->logout();
         return $this->withSuccessMessage('Đăng xuất thành công!');
     }
 
@@ -89,20 +89,21 @@ class UserController extends BaseController
         $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
         $twilio = new Client($twilio_sid, $token);
         Log::info($request->get('phone'));
-        // try {
-        //     $twilio->verify->v2->services($twilio_verify_sid)
-        //         ->verifications
-        //         ->create($request['phone'], "sms");
-        // }
-        // catch (\Exception $e) {
-        //     return $this->sendError('Số điện thoại không hợp lệ');
-        // }
+        try {
+            $twilio->verify->v2->services($twilio_verify_sid)
+                ->verifications
+                ->create($request['phone'], "sms");
+        }
+        catch (\Exception $e) {
+            return $this->sendError('Số điện thoại không hợp lệ');
+        }
 
         $customer = $this->user->firstOrCreate([
             'name' => $request['name'],
             'phone' => $request['phone'],
             'password' => Hash::make($request['password']),
             'sex' => $request['sex'],
+            'email'=>$request['email'],
         ]);
         return $this->withData($customer, 'Chúng tôi đã gửi mã xác nhận đến số điện thoại của bạn!', 201);
     }

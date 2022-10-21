@@ -14,13 +14,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'App\Models\Model' => 'App\Policies\ModelPolicy',
     ];
      
-    public function __construct()
-    {
-        $this->user=new User();
-    }
     /**
      * Register any authentication / authorization services.
      *
@@ -30,14 +26,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('isSuperAdmin', function($user){
-            return $this->user->getType($user->id)=='3';
+        Gate::define('isSuperadmin', function(User $user){
+            return true;});
+        Gate::define('isAdmin', function(User $user){
+            return $user->roles->first()->slug=='admin';
         });
-        Gate::define('isAdmin', function($user){
-            return $this->user->getType($user->id)=='1';
-        });
-        Gate::define('isUser', function($user){
-            return $this->user->getType($user->id)=='2';
+        Gate::define('isUser', function(User $user){
+            return $user->roles->first()->slug=='user';
         });
     }
     

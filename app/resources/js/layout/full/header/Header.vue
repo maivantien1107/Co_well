@@ -1,102 +1,67 @@
 <template>
-	<header class="gridx">
-		<vs-navbar
-      v-model="indexActive"
-      :color="topbarColor"
-      class="topnavbar" text-color="rgba(255,255,255,0.7)" active-text-color="rgba(255,255,255,1)">
-      <!---
-      Template logo
-      --> 
-      <div slot="title" class="themelogo">
-        <img :src="logo" v-if="logo" alt="Dashboard"/>
-        <span class="logo-text" v-if="title">{{ title }}</span>
+  <div class="header-container left-60 top-4 ml-4 rounded border-yellow-300 border-2 fixed right-4 bg-yellow-100 flex items-center justify-between h-14 z-10">
+    <div class="search">
+      <span class="material-icons text-yellow-500 mx-2 text-3xl"> grade </span>
+    </div>
+    <div class="flex items-center">
+      <Notification class="mt-2" :notifications="notifications" />
+      <div class="user-info flex justify-center items-center mr-2">
+        <span class="font-semibold mx-2">{{ userInfo.name }}</span>
+        <vs-dropdown>
+          <vs-avatar class="mt-3" />
+          <vs-dropdown-menu class="w-max">
+            <vs-dropdown-item>
+              <div class="flex justify-start items-center" @click="$router.push('/admin-profile')">
+                <span class="material-icons mx-2 text-xl"> person </span>
+                Thông tin người dùng
+              </div>
+            </vs-dropdown-item>
+            <vs-dropdown-item>
+              <div class="flex justify-start items-center" @click="handleLogout">
+                <span class="material-icons mx-2 text-xl"> logout </span>
+                Đăng xuất
+              </div>
+            </vs-dropdown-item>
+          </vs-dropdown-menu>
+        </vs-dropdown>
       </div>
-      <!---
-      Mobile toggle
-      --> 
-      <div slot="title">
-        <div class="hiddenDesktop cursor-pointer" @click.stop="activeSidebar"><vs-icon icon="menu"></vs-icon></div>
-      </div>
-      <!---
-      Craete new dd
-      -->   
-      <vs-button color="danger" href="https://www.wrappixel.com" type="filled">Upgrade to Pro</vs-button>
-
-     
-
-      <vs-spacer></vs-spacer>
-       
-      <!---
-      Craete new dd
-      -->   
-      <vs-dropdown  vs-trigger-click left class="cursor-pointer pr-2 pl-2 ml-1 mr-1">
-         <a class="text-white-dark" href="#"><vs-icon icon="notifications"></vs-icon></a>
-        <vs-dropdown-menu class="topbar-dd">
-          <vs-dropdown-item>Action</vs-dropdown-item>
-          <vs-dropdown-item>Another Action</vs-dropdown-item>
-          <vs-dropdown-item>Something</vs-dropdown-item>
-          <vs-dropdown-item>Here</vs-dropdown-item>
-        </vs-dropdown-menu>
-      </vs-dropdown>
-      <!---
-      Craete new dd
-      -->   
-      <vs-dropdown  vs-trigger-click left class="cursor-pointer pr-2 pl-2 ml-1 mr-1">
-         <a class="text-white-dark" href="#"><vs-icon icon="mode_comment"></vs-icon></a>
-        <vs-dropdown-menu class="topbar-dd">
-          <vs-dropdown-item>Action</vs-dropdown-item>
-          <vs-dropdown-item>Another Action</vs-dropdown-item>
-          <vs-dropdown-item>Something</vs-dropdown-item>
-          <vs-dropdown-item>Here</vs-dropdown-item>
-        </vs-dropdown-menu>
-      </vs-dropdown>
-      <!---
-      Craete new dd
-      -->   
-      <vs-dropdown  vs-trigger-click left class="cursor-pointer pr-2 pl-2 ml-1 mr-md-3">
-         <a class="text-white-dark user-image" href="#"><img src="@/assets/images/users/3.jpg" alt="User"/></a>
-        <vs-dropdown-menu class="topbar-dd">          
-            <vs-dropdown-item><vs-icon icon="person_outline" class="mr-1"></vs-icon> My Profile</vs-dropdown-item>
-            <vs-dropdown-item><vs-icon icon="sentiment_very_satisfied" class="mr-1"></vs-icon> My Balance</vs-dropdown-item>
-            <vs-dropdown-item><vs-icon icon="mail_outline" class="mr-1"></vs-icon> Inbox</vs-dropdown-item>
-            <hr class="mb-1" />
-            <vs-dropdown-item><vs-icon icon="gps_not_fixed" class="mr-1"></vs-icon> Account Setting</vs-dropdown-item>
-        </vs-dropdown-menu>
-      </vs-dropdown>
-      
-    </vs-navbar>
-     
-	</header>
-
+    </div>
+  </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+import Notification from '@/components/common/Notification.vue'
 export default {
-	name : 'Header',
-  props: {
-      topbarColor: {
-          type: String,
-          default: "#2962ff",
-      },
-      title: {
-            type: String,
-      },
-      logo: {
-          type: String
-      },
+  name: 'Header',
+  data() {
+    return {}
   },
-  data:()=>({
-    indexActive: 0,
-    showToggle: false
-    
-  }),
-
+  components: {
+    Notification
+  },
+  computed: {
+    ...mapGetters({
+      profile: 'auth/profile',
+      notifications: 'notification/admin'
+    }),
+    userInfo() {
+      return this.profile || JSON.parse(localStorage.getItem('profileAdmin'))
+    }
+  },
   methods: {
-      //This is for sidebar trigger in mobile
-      activeSidebar() {
-          this.$store.commit('IS_SIDEBAR_ACTIVE', true);
-      }
-      
+    ...mapActions({
+      logout: 'auth/logout',
+      getProfile: 'auth/getProfile',
+      getNotifications: 'notification/getNotificationsForAdmin'
+    }),
+    async handleLogout() {
+      await this.logout()
+    }
+  },
+  async created() {
+    await this.getProfile()
+    await this.getNotifications()
   }
 }
 </script>

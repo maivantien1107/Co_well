@@ -6,7 +6,7 @@ use App\Models\Role;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -59,6 +59,7 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($users as $userItem) {
+            // $user  =  \App\Models\User::factory()->create($userItem);
             $userItem['password'] = '1234567@';
             $user = Sentinel::registerAndActivate($userItem);
             switch ($userItem['email']) {
