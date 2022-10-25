@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use SMTPValidateEmail\Validator as SmtpEmailValidator;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -58,7 +58,6 @@ class ManagerController extends BaseController
         $validated = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'email|required|unique:users,email|max:255',
-            'password' => 'required|max:255|min:6',
             'sex' => 'required',
             'role_id' => 'required',
             'phone' => 'required',
@@ -66,14 +65,14 @@ class ManagerController extends BaseController
         if ($validated->fails()) {
             return $this->failValidator($validated);
         }
-        $checkMailValid = $this->checkValidatedMail($request['email']);
-        if (!$checkMailValid) {
-            return $this->sendError('This email is not valid!');
-        }
+        // $checkMailValid = $this->checkValidatedMail($request['email']);
+        // if (!$checkMailValid) {
+        //     return $this->sendError('This email is not valid!');
+        // }
             $user = $this->user->create([
                 'name' => $request['name'],
                 'email' => $request['email'],
-                'password' => Hash::make($request['password']),
+                'password' => Hash::make($request['phone']),
                 'sex' => $request['sex'],
                 'phone'=>$request['phone']
             ]);
@@ -125,11 +124,8 @@ class ManagerController extends BaseController
         $user = User::find($id);
         $validateRequest = [
             'name' => 'required|max:255',
+            'sex' => 'required',
             'role_id' => 'required',
-            'sex'=>'required',
-            'phone'=>'',
-            'email' => 'email|required|max:255',
-
         ];
         
         $validated = Validator::make($request->all(), $validateRequest);
@@ -157,6 +153,9 @@ class ManagerController extends BaseController
     public function destroy($id)
     {
         $user = $this->user->findOrFail($id);
+        if ($user->type == 1 || Auth::user()->id == $id) {
+            return $this->unauthorizedResponse();
+        }
         $user->delete();
 
         return $this->withSuccessMessage('User has been deleted!');

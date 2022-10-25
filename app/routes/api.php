@@ -3,7 +3,6 @@
 use App\Http\Controllers\Api\Admin\ManagerController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\User\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,14 +31,12 @@ Route::post('/verify-phone', [UserController::class,'verifiedPhone'])->name('use
 Route::get('/active-email/{token}', [UserController::class,'customerActiveMail'])->name('user.active-email');
 
 //manager admin
-// Route::group(['middleware'=>['jwt.auth:Admin'],], function(){
-//     Route::apiResource('user', ManagerController::class)->middleware('jwt.auth:Admin');
-// });
+
 Route::middleware(['jwt.auth','admin'])->group(function(){
     Route::get('/admin',[ManagerController::class ,'index'])->name('user.index');
-    Route::get('/amidn/getuser/{$id}',[ManagerController::class ,'show'])->name('user.detail');
+    Route::get('/admin/{id}',[ManagerController::class ,'show'])->name('user.show');
     Route::post('/admin/create-user',[ManagerController::class ,'store'])->middleware('superadmin')->name('user.store');
-    Route::post('/admin/update-user/{$id}',[ManagerController::class ,'update'])->middleware('superadmin')->name('user.update');
+    Route::put('/admin/update-user/{id}',[ManagerController::class ,'update'])->middleware('superadmin')->name('user.update');
     Route::delete('/admin/delete/{id}',[ManagerController::class ,'destroy'])->middleware('superadmin')->name('user.destroy');
     // Route::apiResource('user',ManagerController::class);
    

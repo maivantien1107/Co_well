@@ -26,7 +26,7 @@ const actions = {
     if (response) {
       dispatch('setToken', response.data)
       dispatch('app/setSuccessNotification', 'Đăng nhập thành công !', { root: true })
-      router.push('/admin')
+      router.push('/admin-user')
     }
   },
   async getProfile({ commit, dispatch }) {
