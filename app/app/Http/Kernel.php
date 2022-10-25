@@ -37,6 +37,10 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+        'editor' => [
+            \App\Http\Middleware\Admin::class,
+            \App\Http\Middleware\SuperAdmin::class,
+        ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
@@ -64,7 +68,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\Admin::class,
-        'guest' => \App\Http\Middleware\User::class,
-        'jwt.auth'=> \App\Http\Middleware\VerifyJWTToken::class,
+        'user' => \App\Http\Middleware\User2::class,
+        'superadmin'=> \App\Http\Middleware\SuperAdmin::class,
+        // 'jwt.auth'=> \App\Http\Middleware\VerifyJWTToken::class,
     ];
 }

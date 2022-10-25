@@ -4,9 +4,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use \App\Models\User;
 
-class User
+class User2
 {
     /**
      * Handle an incoming request.
@@ -17,14 +19,11 @@ class User
      */
     public function handle(Request $request, Closure $next, ...$guard)
     {
-        if (Auth::user()->getGuarded() == "web") {
-            return $next($request);
-        }
-        $response = [
-            'success' => false,
-            'message' => "Bạn không phải khách hàng",
-        ];
-
-        return response()->json($response, 401);
+        $user = JWTAuth::toUser($request->input('token'));
+        $tk =new User();
+              if ($tk->getType($user->id)!='user'){
+                return response()->json(['error'=>'Không có quyền truy cập']);
+              }
+        return $next($request);
     }
 }

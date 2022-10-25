@@ -44,8 +44,6 @@ class ManagerController extends BaseController
         ->join('roles','role_id','=','roles.id')
         ->orderBy('users.id','desc')
         ->get();
-        
-        // $users=$this->user->all();
         return $this->withData($users, 'List User');
     }
 
@@ -57,7 +55,6 @@ class ManagerController extends BaseController
      */
     public function store(Request $request)
     { 
-        
         $validated = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'email|required|unique:users,email|max:255',
@@ -91,7 +88,7 @@ class ManagerController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         // $user = JWTAuth::toUser($request->input('token')); 
         $user = User::select([
@@ -113,7 +110,6 @@ class ManagerController extends BaseController
         ->join('roles','role_id','=','roles.id')
         ->where('users.id',$id)
         ->first();
-        // $type=$this->user->getType($user->id);
         return $this->withData($user, 'User Detail');
     }
 

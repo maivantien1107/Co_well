@@ -71,8 +71,11 @@ class User extends Authenticatable implements JWTSubject
         );
     }
     public function getType($id){
-        $type = DB::table('role_users')->where('user_id',$id)->first();
-        return $type->role_id;
+        $role=Role::select(['roles.slug','ru.role_id'])
+                ->leftJoin('role_users as ru','roles.id','ru.role_id')
+                ->where('ru.user_id',$id)
+                ->first();
+        return $role->slug;
     }
     
 }

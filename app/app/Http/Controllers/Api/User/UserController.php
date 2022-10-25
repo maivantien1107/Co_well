@@ -33,11 +33,9 @@ class UserController extends BaseController
             }
 
             $credentials = request(['phone', 'password']);
-
             if (!Auth::guard('web')->attempt($credentials)) {
                 return $this->badRequest('Sai thông tin đăng nhập!');
             }
-
             $customer = User::where('phone', $request->phone)->first();
             // if (!$customer->is_verified) {
             //     return $this->badRequest('Tài khoản chưa kích hoạt');
