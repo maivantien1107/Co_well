@@ -10,10 +10,10 @@
   export default {
     name: 'app',
     watch: {
-      '$store.state.app.loading'(val) {
-        if (val) this.$vs.loading()
-        else this.$vs.loading.close()
-      },
+      // '$store.state.app.loading'(val) {
+      //   if (val) this.$vs.loading()
+      //   else this.$vs.loading.close()
+      // },
       '$store.state.app.notification': {
         handler(val) {
           if (val.show) {

@@ -4,8 +4,8 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import './bootstrap';
-import '../sass/app.scss'
+// import './bootstrap';
+// import '../sass/app.scss'
 import './assets/css/main.css'
 import './assets/scss/main.scss'
 // import { createApp } from 'vue';
@@ -18,6 +18,7 @@ import './assets/scss/main.scss'
  import Vue from 'vue'
  import router from '@/router';
  import Vuesax from 'vuesax';
+ import 'boxicons/css/boxicons.min.css'
  import 'material-icons/iconfont/material-icons.css';
  import 'vuesax/dist/vuesax.css';
  import App from './App.vue';

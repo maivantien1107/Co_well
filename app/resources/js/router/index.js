@@ -42,10 +42,21 @@ const router = new Router({
             {
               path: '/admin',
               name: 'admin',
-              redirect: '/admin-user',
+              redirect: '/dashboard',
               component: () => import('@/layout/full/MainContainer.vue'),
+              // component : ()=>import('@/App.vue'),
               children: [
                 {
+                  path: '/dashboard',
+                  name: 'dashboard',
+                  component : () => import('@/views/StarterPage.vue'),
+                  meta: {
+                    rule:'user'
+                  }
+
+                },
+                {
+
                   path: '/admin-user',
                   name: 'admin-user',
                   component: () => import('@/views/admin/UserManager.vue'),

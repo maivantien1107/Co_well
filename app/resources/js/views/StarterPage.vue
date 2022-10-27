@@ -1,5 +1,5 @@
 <template>
- <div>
+ <!-- <div>
   <States/>
  <vs-row vs-justify="center">
     <vs-col type="flex" vs-justify="center" vs-align="center" vs-lg="8" vs-sm="6" vs-xs="12" code-toggler>
@@ -38,24 +38,27 @@
     </vs-col>
   </vs-row>
   <Blogs/>
-</div>  
+</div>   -->
+<div>
+  <span>tien</span>
+</div>
 </template>
 
 <script>
-import SalesSummary from './components/dashboard/SalesSummary.vue';
-import SalesIncome from './components/dashboard/SalesIncome.vue';
-import TopProducts from './components/dashboard/TopProducts.vue';
-import States from './components/dashboard/States.vue';
-import Blogs from './components/dashboard/Blogs.vue';
+// import SalesSummary from './components/dashboard/SalesSummary.vue';
+// import SalesIncome from './components/dashboard/SalesIncome.vue';
+// import TopProducts from './components/dashboard/TopProducts.vue';
+// import States from './components/dashboard/States.vue';
+// import Blogs from './components/dashboard/Blogs.vue';
 
 export default {
 	name: 'StarterPage',
   components: {
-    SalesSummary,
-    SalesIncome,
-    TopProducts,
-    States,
-    Blogs
+    // SalesSummary,
+    // SalesIncome,
+    // TopProducts,
+    // States,
+    // Blogs
   }
 }
 </script>

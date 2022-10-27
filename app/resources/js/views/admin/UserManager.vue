@@ -2,20 +2,19 @@
     <div class="user-manage">
       <!-- <TitlePage title="Quản lý users" icon="manage_accounts" /> -->
       <div class="user-content">
-        <vs-table
+        <!-- <vs-table
           noDataText="Chưa có người dùng "
           class="border-2 border-red-200 mt-4"
           pagination
           max-items="10"
           :data="users"
-        >
-          <template slot="header">
+        > -->
+          <!-- <template slot="header">
             <div class="flex justify-between items-center m-2 mb-8 w-full">
               <div
                 @click="onCreate"
                 class="flex items-center justify-center p-2 rounded cursor-pointer bg-gray-100 hover:bg-gray-200 border-blue-400 border-2"
               >
-                <span class="material-icons text-green-600 mx-2">person_add</span>
                 <span class="font-bold">Thêm người dùng</span>
               </div>
               <div>
@@ -28,8 +27,9 @@
                 />
               </div>
             </div>
-          </template>
-          <template slot="thead">
+          </template> -->
+         
+          <!-- <template slot="thead">
             <vs-th sort-key="id">STT</vs-th>
             <vs-th sort-key="name">Tên</vs-th>
             <vs-th sort-key="email">Email</vs-th>
@@ -60,10 +60,66 @@
                 <span class="material-icons text-red-400 hover:text-black" @click="onDelete(prop.id)">delete_forever</span>
               </vs-td>
             </vs-tr>
-          </template>
-        </vs-table>
+          </template> -->
+        <!-- </vs-table> -->
       </div>
-      <vs-popup
+      <template>
+    <div class="center">
+      <vs-table>
+        <template #thead>
+          <vs-tr>
+            <vs-th sort @click="users = $vs.sortData($event ,users, 'id')">
+              STT
+            </vs-th>
+            <vs-th sort @click="users = $vs.sortData($event ,users, 'name')">
+              Name
+            </vs-th>
+            <vs-th sort @click="users = $vs.sortData($event ,users, 'email')">
+              Email
+            </vs-th>
+            <vs-th sort @click="users = $vs.sortData($event ,users, 'phone')">
+              Phone
+            </vs-th>
+            <vs-th sort @click="users = $vs.sortData($event ,users, 'role_name')">
+              Role
+            </vs-th>
+            <vs-th>Thao tác</vs-th>
+          </vs-tr>
+        </template>
+        <template #tbody>
+          <vs-tr
+            :key="i"
+            v-for="(tr, i) in $vs.getPage(users, page, max)"
+            :data="tr"
+          >
+            <vs-td>
+            {{ tr.id }}
+            </vs-td>
+            <vs-td>
+              {{ tr.name }}
+            </vs-td>
+            <vs-td>
+            {{ tr.email }}
+            </vs-td>
+            <vs-td>
+            {{ tr.phone }}
+            </vs-td>
+            <vs-td>
+            {{ tr.role_name }}
+            </vs-td>
+            <vs-td>
+              <span class="material-icons mr-2 text-blue-600 hover:text-black" @click="onEdit(prop.id)">edit</span>
+              <span class="material-icons text-red-400 hover:text-black" @click="onDelete(prop.id)">delete_forever</span>
+            </vs-td>
+          </vs-tr>
+        </template>
+        <template #footer>
+          <vs-pagination v-model="page" :length="$vs.getLength(users, max)" />
+        </template>
+      </vs-table>
+    </div>
+  </template>
+      <!-- <vs-popup
         :title="isCreate ? 'Thêm người dùng' : 'Chỉnh sửa người dùng'"
         :active.sync="isShowDialog"
         button-close-hidden
@@ -75,7 +131,7 @@
           @actionEdit="actionEdit"
           @actionDelete="onDelete"
         />
-      </vs-popup>
+      </vs-popup> -->
       
     </div>
   </template>
@@ -87,6 +143,9 @@
     name: 'UserManagePage',
     data() {
       return {
+        search:'',
+        page:1,
+        max:10,
         isShowDialog: false,
         isEdit: false,
         isCreate: false,
