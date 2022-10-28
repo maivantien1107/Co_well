@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use SMTPValidateEmail\Validator as SmtpEmailValidator;
@@ -153,7 +154,7 @@ class ManagerController extends BaseController
     public function destroy($id)
     {
         $user = $this->user->findOrFail($id);
-        if ($user->type == 1 || Auth::user()->id == $id) {
+        if ($this->user->getType($user->id) == 'superadmin' || Auth::user()->id == $id) {
             return $this->unauthorizedResponse();
         }
         $user->delete();

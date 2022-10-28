@@ -4,8 +4,8 @@ const SEX_TYPE = {
     2: 'Khác'
   };
   const USER_TYPE ={
-    2: 'user',
     1: 'admin',
+    2: 'user',
     3: 'superadmin',
 };
   

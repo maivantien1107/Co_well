@@ -1,6 +1,6 @@
 <template>
 	<div class="admin-main flex">
-	  <Sidebar />
+	  <!-- <Sidebar /> -->
 	  <div class="content w-full">
 		<Header />
 		<div class="main background h-screen ml-64 mr-4 rounded mt-24 border-2">

@@ -29,42 +29,7 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters } from 'vuex'
-import Notification from '@/components/common/Notification.vue'
-export default {
-  name: 'Header',
-  data() {
-    return {}
-  },
-  components: {
-    Notification
-  },
-  computed: {
-    ...mapGetters({
-      profile: 'auth/profile',
-      notifications: 'notification/admin'
-    }),
-    userInfo() {
-      return this.profile || JSON.parse(localStorage.getItem('profileAdmin'))
-    }
-  },
-  methods: {
-    ...mapActions({
-      logout: 'auth/logout',
-      getProfile: 'auth/getProfile',
-      getNotifications: 'notification/getNotificationsForAdmin'
-    }),
-    async handleLogout() {
-      await this.logout()
-    }
-  },
-  async created() {
-    await this.getProfile()
-    await this.getNotifications()
-  }
-}
-</script> -->
+ -->
 <template>
   <div class="center examplex">
     <vs-navbar text-white :color="active" center-collapsed v-model="active">
@@ -95,35 +60,19 @@ export default {
         </vs-navbar-item>
       </template>
     </vs-navbar>
-    <div class="square">
-      <div class="child">
-        child 1
-      </div>
-      <div class="child">
-        child 2
-      </div>
-      <div class="child">
-        child 3
-      </div>
-    </div>
   </div>
 </template>
+
 <script>
-export default {
-  data:() => ({
-    active: 'primary'
-  })
-}
-</script>
-<!-- <script>
 import { mapActions, mapGetters } from 'vuex'
 import Notification from '@/components/common/Notification.vue'
 export default {
   name: 'Header',
-  data:()=>( {
-    active:'primary',
-    return {}
-  }),
+  data(){
+    return {
+      active:'primary',
+    }
+  },
   components: {
     Notification
   },
@@ -151,4 +100,4 @@ export default {
     await this.getNotifications()
   }
 }
-</script> -->
+</script>

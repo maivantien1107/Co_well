@@ -4,10 +4,16 @@
     class="sidebar-item rounded flex items-center p-2 mb-2 hover:bg-gray-200 cursor-pointer"
     :class="{ 'bg-gray-200': itemSelected.slug === item.slug }"
   >
-    <span class="material-icons mr-4">{{ item.icon }}</span>
-    <span class="label font-bold">{{ item.label }}</span>
+    <vs-sidebar-item id="home">
+        <template #icon>
+          <i class='bx bx-home'></i>
+        </template>
+        {{itemSelected.lable}}
+      </vs-sidebar-item>
   </div>
+  
 </template>
+
 
 <script>
 export default {
