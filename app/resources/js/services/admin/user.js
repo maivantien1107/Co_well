@@ -17,7 +17,7 @@ export default {
     return axios.delete(`api/admin/delete/${userId}`)
   },
   searchUser(emailFilter) {
-    return axios.post(`api/user/search`, emailFilter)
+    return axios.post(`api/admin/search`, emailFilter)
   },
   changePassword(data) {
     return axios.put(`api/user/change-password-profile`, data)

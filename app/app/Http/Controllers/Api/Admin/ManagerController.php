@@ -170,4 +170,17 @@ class ManagerController extends BaseController
         $results   = $validator->validate();
         return $results[$email];
     }
+
+    public function search(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'email' => 'required|max:255'
+        ]);
+        if ($validated->fails()) {
+            return $this->failValidator($validated);
+        }
+        $users=User::whereRaw('match(email,name,phone) against(?)', array($request['email']))
+                    ->get();
+        return $this->withData($users, 'Search done');
+    }
 }

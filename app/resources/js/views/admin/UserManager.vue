@@ -16,7 +16,7 @@
                 <span class="font-bold">Thêm người dùng</span>
               </div>
               <div>
-                <vs-input type="text" v-model="searchFilter"   @keyup.enter="onSearch" border placeholder="Tìm kiếm theo email">
+                <vs-input type="text" v-model="searchFilter"   @keyup="onSearch" border placeholder="Tìm kiếm theo email">
                   <template #icon>
                     <i class='bx bx-search'></i>
                   </template>
