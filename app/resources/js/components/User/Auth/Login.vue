@@ -95,13 +95,39 @@
       </vs-popup>
     </div>
   </template>
-  
+  <template>
+    <div class="center">
+      <vs-dialog not-close v-model="active">
+        <template #header>
+          <h4 class="not-margin">
+            Xác thực OTP
+          </h4>
+        </template>
+
+
+        <div class="con-form">
+            <span>Mã xác nhận</span>
+          <vs-input  lable="OTP" v-model="otp" placeholder="OTP">
+          </vs-input>
+        </div>
+
+        <template #footer>
+          <div class="footer-dialog">
+            <vs-button block @click="handleVerify">
+              Xác nhận
+            </vs-button>
+          </div>
+        </template>
+      </vs-dialog>
+    </div>
+  </template>
   <script>
   import { mapActions } from 'vuex'
   import { convertPhone } from '@/helpers/convert-string'
   export default {
     data() {
       return {
+        active:false,
         isForgetPassword: false,
         isEnterCode: false,
         isConfirmNewPassword: false,

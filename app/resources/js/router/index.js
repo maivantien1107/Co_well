@@ -11,17 +11,6 @@ const router = new Router({
     return { x: 0, y: 0 }
   },
   routes : [
-        
-            {
-                name: "login",
-                path: "/login",
-                component: ()=>import('@/components/User/Auth/Login.vue'),
-                meta: {
-                    rule: 'user',
-                    title: `Login`
-                }
-            },
-           
             {
                 name: "register",
                 path: "/register",
@@ -32,9 +21,17 @@ const router = new Router({
                 }
             },
             {
-              path: '/admin-login',
-              name: 'admin-login',
+              path: '/login',
+              name: 'login',
               component: () => import('@/components/Login.vue'),
+              meta: {
+                rule: 'user'
+              }
+            },
+            {
+              path: '/verify-otp',
+              name: 'verify-otp',
+              component: () => import('@/components/common/VerifyOTP.vue'),
               meta: {
                 rule: 'user'
               }

@@ -37,9 +37,9 @@ class UserController extends BaseController
                 return $this->badRequest('Sai thông tin đăng nhập!');
             }
             $customer = User::where('phone', $request->phone)->first();
-            // if (!$customer->is_verified) {
-            //     return $this->badRequest('Tài khoản chưa kích hoạt');
-            // }
+            if (!$customer->is_verified) {
+                return $this->badRequest('Tài khoản chưa kích hoạt');
+            }
 
             if (!Hash::check($request->password, $customer->password, [])) {
                 throw new \Exception('Sai thông tin đăng nhập!');

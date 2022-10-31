@@ -8,6 +8,9 @@ export default {
     await axios.get('/sanctum/csrf-cookie')
     return axios.post('api/login', data)
   },
+  async verifyotp(data) {
+    return axios.post('api/otp', data)
+  },
   getProfile() {
     return axios.get('api/user/profile')
   },
