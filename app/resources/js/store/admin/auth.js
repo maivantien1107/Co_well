@@ -32,6 +32,14 @@ const actions = {
       router.push('/admin-user')
     }
   },
+  async verifyotp({ dispatch }, data) {
+    const response = await authService.verifyotp(data)
+    if (response) {
+      dispatch('setToken', response.data)
+      dispatch('app/setSuccessNotification', 'Đăng nhập thành công !', { root: true })
+      router.push('/admin-user')
+    }
+  },
   async getProfile({ commit, dispatch }) {
     const response = await authService.getProfile()
     if (response) {
@@ -51,16 +59,7 @@ const actions = {
       router.push('/login')
     }
   },
-  resetPassword(store, email) {
-    return authService.resetPassword(email)
-  },
-  async changePassword({ dispatch }, data) {
-    const res = await authService.changePassword(data)
-    if (res) {
-      dispatch('setToken')
-      router.push('/login')
-    }
-  },
+
   setToken({ commit }, data = undefined) {
     if (!data) {
       commit('SET_TOKEN', null)

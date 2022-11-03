@@ -43,6 +43,7 @@ class UserSeeder extends Seeder
                 'phone' => fake()->phoneNumber(),
                 'username'=>fake()->name(),
                 'sex'=>'1',
+                'username'=>fake()->name(),
                 'email' => 'admin@example.com',
             ],
             [
@@ -50,6 +51,7 @@ class UserSeeder extends Seeder
                 'phone' => fake()->phoneNumber(),
                 'username'=>fake()->name(),
                 'sex'=>'1',
+                'username'=>fake()->name(),
                 'email' => 'super@example.com',
             ],
             [
@@ -57,6 +59,7 @@ class UserSeeder extends Seeder
                 'phone' => fake()->phoneNumber(),
                 'username'=>fake()->name(),
                 'sex'=>'1',
+                'username'=>fake()->name(),
                 'email' => 'user@example.com',
             ],
         ];
