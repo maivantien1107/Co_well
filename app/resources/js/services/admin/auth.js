@@ -4,9 +4,11 @@ export default {
   ///////////////////////////////
   /////        ADMIN        /////
   ///////////////////////////////
-  async login(data) {
-    await axios.get('/sanctum/csrf-cookie')
+   async login(data) {
     return axios.post('api/login', data)
+  },
+  async verifyotp(data){
+    return axios.post('api/otp',data)
   },
   getProfile() {
     return axios.get('api/user/profile')

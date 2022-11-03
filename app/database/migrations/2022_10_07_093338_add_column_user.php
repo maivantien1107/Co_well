@@ -16,6 +16,8 @@ return new class extends Migration
     {
         Schema::table('users',function(Blueprint $table) {
             $table->timestamp('phone_verified_at')->nullable()->after('phone');
+            $table->timestamp('email_verified_at')->nullable()->after('email');
+            $table->boolean('is_verified')->default(false)->after('username');
             $table->boolean('sex')->after('name');
         });
     }
@@ -29,6 +31,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table){
             $table->dropColumn('phone_verified_at');
+            $table->dropColumn('email_verified_at');
+            $table->dropColumn('is_verified');
             $table->dropColumn('sex');
         });
     }

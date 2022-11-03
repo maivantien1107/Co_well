@@ -7,7 +7,6 @@
             <vs-dropdown-item class="w-72 bg-gray-100" :class="{ 'bg-gray-50': notification.status }" v-for="(notification, index) in notifications" :key="index">
               <vs-row class="content">
                 <vs-col vs-w="3">
-                  <img class="w-12 rounded-full" :src="notification.notification_avatar" alt="avt" />
                 </vs-col>
                 <vs-col vs-w="9">
                   <p class="title leading-none tracking-tighter">{{ notification.title }}</p>

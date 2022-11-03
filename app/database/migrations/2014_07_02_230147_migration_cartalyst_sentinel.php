@@ -96,16 +96,16 @@ class MigrationCartalystSentinel extends Migration
 
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('email');
+            $table->string('email')->nullable();
+            $table->string('username')->unique();
             $table->string('password');
             $table->text('permissions')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->string('name')->nullable();
-            $table->string('phone', 20)->unique();
+            $table->string('phone', 20)->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->engine = 'InnoDB';
-            $table->unique('email');
         });
     }
 

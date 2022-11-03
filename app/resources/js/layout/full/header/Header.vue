@@ -27,11 +27,12 @@
       </div>
     </div>
   </div>
-</template>
+</template> -->
 
- -->
+
 <template>
   <div class="center examplex">
+    <Notification class="mt-2" :notifications="notifications" />
     <vs-navbar text-white :color="active" center-collapsed v-model="active">
       <template #left>
         <img src="/logos/logo-vuesax-logotipo-vuesax-png-4.png" alt="">
@@ -56,7 +57,10 @@
           HEX
         </vs-navbar-item>
         <vs-navbar-item :active="active == 'rgb(59,222,200)'" id="rgb(59,222,200)">
-          RGB
+          <div class="flex justify-start items-center" @click="handleLogout">
+                <span class="material-icons mx-2 text-xl"> logout </span>
+                Đăng xuất
+              </div>
         </vs-navbar-item>
       </template>
     </vs-navbar>

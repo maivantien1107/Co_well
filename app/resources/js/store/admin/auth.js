@@ -21,8 +21,11 @@ const mutations = {
 }
 
 const actions = {
-  async login({ dispatch }, data) {
-    const response = await authService.login(data)
+ async login(commit, data) {
+   return authService.login(data)
+  },
+  async verifyotp({ dispatch }, data) {
+    const response = await authService.verifyotp(data)
     if (response) {
       dispatch('setToken', response.data)
       dispatch('app/setSuccessNotification', 'Đăng nhập thành công !', { root: true })

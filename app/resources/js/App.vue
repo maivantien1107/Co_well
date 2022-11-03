@@ -13,19 +13,19 @@ export default {
     //   if (val) this.$vs.loading()
     //   else this.$vs.loading.close()
     // },
-    // '$store.state.app.notification': {
-    //   handler(val) {
-    //     if (val.show) {
-    //       this.$vs.notify({
-    //         title: '',
-    //         time: 2500,
-    //         text: val.message,
-    //         color: val.type
-    //       })
-    //     }
-    //   },
-    //   deep: true
-    // }
+    '$store.state.app.notification': {
+      handler(val) {
+        if (val.show) {
+          this.$vs.notification({
+            title: '',
+            time: 2500,
+            text: val.message,
+            color: val.type
+          })
+        }
+      },
+      deep: true
+    }
   },
   methods: {
     ...mapActions({

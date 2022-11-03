@@ -18,8 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('/login', [AdminController::class,'login'])->name('admin.login');
-Route::post('/reset-password', [AdminController::class, 'sendMail'])->name('admin.sendMailResetPassword');
-Route::put('/reset-password/{token}', [AdminController::class, 'resetPassword'])->name('admin.resetPassword');
+Route::post('/otp', [AdminController::class,'authOTP'])->name('admin.authotp');
 
 //user
 Route::post('/customer-register', [UserController::class,'register'])->name("user.register");

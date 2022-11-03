@@ -36,7 +36,7 @@ instance.interceptors.response.use(
   },
   async error => {
     if (error) {
-      const { message } = error.response.data
+      const  message  = error.response.message
       store.dispatch('app/setErrorNotification', message || 'Đã xảy ra lỗi, vui lòng thử lại sau !')
       store.dispatch('app/setLoading', false)
       const originalRequest = error.config
@@ -44,7 +44,7 @@ instance.interceptors.response.use(
         originalRequest._retry = true
         if (router.history._startLocation.search('admin') !== -1) {
           store.dispatch('auth/setToken')
-          return router.push('/admin-login')
+          return router.push('/login')
         } else {
           store.dispatch('clientAuth/setToken')
           return router.push('/login')
