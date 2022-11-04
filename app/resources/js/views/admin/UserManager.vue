@@ -15,6 +15,15 @@
                 <span class="material-icons text-green-600 mx-2">person_add</span>
                 <span class="font-bold">Thêm người dùng</span>
               </div>
+              <div class="knd-field-group">
+                <a
+                    :href="url"
+                     class="dropdown-item"
+                     type="button"
+                            >
+                                Export
+                            </a>
+              </div>
               <div>
                 <vs-input type="text" v-model="searchFilter"   @keyup="onSearch" border placeholder="Tìm kiếm theo email">
                   <template #icon>
@@ -26,6 +35,12 @@
           </template>
       <template #thead>
         <vs-tr>
+          <vs-th>
+              <vs-checkbox
+                :indeterminate="selected.length == users.length" v-model="allCheck"
+                @change="selected = $vs.checkAll(selected, users)"
+              />
+            </vs-th>
           <vs-th sort @click="users = $vs.sortData($event ,users, 'id')">
             STT
           </vs-th>
@@ -49,7 +64,11 @@
           :key="i"
           v-for="(tr, i) in $vs.getPage(users, page, max)"
           :data="tr"
+         
         >
+        <vs-td checkbox>
+              <vs-checkbox :val="tr.id" v-model="selected" />
+            </vs-td>
           <vs-td>
           {{ tr.id }}
           </vs-td>
@@ -85,6 +104,11 @@
         <vs-pagination v-model="page" :length="$vs.getLength(users, max)" />
       </template>
     </vs-table>
+    <span class="data">
+        <pre>
+  {{ selected.length > 0 ? selected : 'Select an item in the table' }}
+        </pre>
+      </span>
   </div>
 </template>
 <vs-dialog width="550px" not-center v-model="active2">
@@ -130,6 +154,8 @@ export default {
   name: 'UserManagePage',
   data() {
     return {
+      allCheck: false,
+        selected: [],
       active2:false,
       search:'',
       page:1,
@@ -138,9 +164,10 @@ export default {
       isEdit: false,
       isCreate: false,
       users: [],
-      selected: null,
+      select: null,
       user: {},
-      searchFilter: null
+      searchFilter: null,
+      url:''
     }
   },
   components: {
@@ -153,7 +180,8 @@ export default {
       createUser: 'createUser',
       updateUser: 'updateUser',
       deleteUser: 'deleteUser',
-      searchUser: 'searchUser'
+      searchUser: 'searchUser',
+      exportUser:'exportUser'
     }),
     async onEdit(id) {
       const res = await this.getUser(id)
@@ -163,7 +191,7 @@ export default {
       this.isShowDialog = true
     },
     onDelete(id) {
-     this.selected=id
+     this.select=id
      this.active2=true
     },
     onCreate() {
@@ -179,6 +207,12 @@ export default {
       this.isShowDialog = false
       this.isDelete = false
     },
+    isChecked(user_id){
+            return this.checked.includes(user_id);
+        },
+        checked: function(value){
+            this.url = "/api/admin/export/" + this.checked;
+        },
     async actionCreate() {
       await this.createUser(this.user)
       await this.fetchUsers()
@@ -190,7 +224,7 @@ export default {
       this.clearEvent()
     },
     async actionDelete() {
-      await this.deleteUser(this.selected)
+      await this.deleteUser(this.select)
       await this.fetchUsers()
       this.active2=false
       this.clearEvent()
@@ -201,11 +235,16 @@ export default {
     },
     async onSearch() {
       await this.searchUser({ email: this.searchFilter })
-    }
+    },
+    async onExport(){
+    await this.exportUser(this.select)
+    this.clearEvent()
+  }
   },
   async created() {
     await this.fetchUsers()
-  }
+  },
+  
 
 }
 </script>

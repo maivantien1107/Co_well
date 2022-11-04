@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Exports\UsersExport;
 use App\Http\Controllers\Api\BaseController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use SMTPValidateEmail\Validator as SmtpEmailValidator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -182,5 +184,17 @@ class ManagerController extends BaseController
         $users=User::whereRaw('match(email,name,phone) against(?)', array($request['email']))
                     ->get();
         return $this->withData($users, 'Search done');
+    }
+    public function export($users) 
+    {
+        $usersArray = explode(',',$users);
+
+        $results=(new UsersExport($usersArray))->download('students.xlsx');
+        if ($results){
+            return $this->withSuccessMessage('export thanh cong');
+        }
+        else {
+            return $this->sendError('Khong thanh cong');
+        }
     }
 }

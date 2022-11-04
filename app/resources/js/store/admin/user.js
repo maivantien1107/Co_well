@@ -29,6 +29,9 @@ const actions = {
   },
   changePassword(commit, data) {
     return userServices.changePassword(data)
+  },
+  exportUser(commit, data){
+    return userServices.exportUser(data)
   }
 }
 
