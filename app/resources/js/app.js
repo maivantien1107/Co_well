@@ -23,6 +23,7 @@ import './assets/scss/main.scss'
  import 'vuesax/dist/vuesax.css';
  import App from './App.vue';
  import store from '@/store'
+
  Vue.config.productionTip = false;
  Vue.use(Vuesax, {});
  new Vue({  

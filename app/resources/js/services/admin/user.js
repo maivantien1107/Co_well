@@ -1,8 +1,8 @@
 import axios from '@/axios'
 
 export default {
-  getUsers() {
-    return axios.get('api/admin')
+  getUsers(page) {
+    return axios.get(`api/admin?page=${page}`)
   },
   getUser(userId) {
     return axios.get(`api/admin/${userId}`)
@@ -17,7 +17,7 @@ export default {
     return axios.delete(`api/admin/delete/${userId}`)
   },
   searchUser(emailFilter) {
-    return axios.post(`api/admin/search`, emailFilter)
+    return axios.get(`api/admin/search`, emailFilter)
   },
   changePassword(data) {
     return axios.put(`api/user/change-password-profile`, data)

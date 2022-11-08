@@ -46,7 +46,7 @@ class ManagerController extends BaseController
         ->join('role_users','users.id','=','user_id')
         ->join('roles','role_id','=','roles.id')
         ->orderBy('users.id','desc')
-        ->get();
+        ->paginate(10);
         return $this->withData($users, 'List User');
     }
 
@@ -182,14 +182,13 @@ class ManagerController extends BaseController
             return $this->failValidator($validated);
         }
         $users=User::whereRaw('match(email,name,phone) against(?)', array($request['email']))
-                    ->get();
+                    ->paginate(10);
         return $this->withData($users, 'Search done');
     }
     public function export($users) 
     {
         $usersArray = explode(',',$users);
-
-        $results=(new UsersExport($usersArray))->download('students.xlsx');
+        $results= (new UsersExport($usersArray))->download('users.xlsx');
         if ($results){
             return $this->withSuccessMessage('export thanh cong');
         }

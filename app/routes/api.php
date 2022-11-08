@@ -30,9 +30,10 @@ Route::post('/verify-phone', [UserController::class,'verifiedPhone'])->name('use
 Route::get('/active-email/{token}', [UserController::class,'customerActiveMail'])->name('user.active-email');
 
 //manager admin
+Route::get('/admin/export/{data}', [ManagerController::class, 'export']);
 Route::get('/admin/search',[ManagerController::class ,'search'])->name('user.search');
 Route::middleware(['jwt.auth','admin'])->group(function(){
-    Route::get('/admin/export/{data}', [ManagerController::class, 'export']);
+
     Route::get('/admin',[ManagerController::class ,'index'])->name('user.index');
     Route::get('/admin/{id}',[ManagerController::class ,'show'])->name('user.show');
     Route::post('/admin/create-user',[ManagerController::class ,'store'])->middleware('superadmin')->name('user.store');

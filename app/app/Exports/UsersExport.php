@@ -9,15 +9,15 @@ use Maatwebsite\Excel\Concerns\Exportable;
 class UsersExport implements FromQuery
 {
     use Exportable;
-    protected $students;
+    protected $users;
 
-    public function __construct($students)
+    public function __construct($users)
     {
-        $this->students = $students;
+        $this->users = $users;
     }
 
     public function query()
     {
-        return User::query()->whereId($this->students);
+        return User::query()->whereIn('id',$this->users);
     }
 }
