@@ -34,7 +34,7 @@
                 @change="selected = $vs.checkAll(selected, users)"
               />
             </vs-th> -->
-          <vs-th><vs-input type="checkbox" v-model="selectPage" /></vs-th>
+          <vs-th><vs-checkbox v-model="selectPage" /></vs-th>
           <vs-th @click.prevent="change_sort('id')" >
             <span>STT</span>
             <span v-if="sort_direction == 'desc' && sort_field == 'id'">&uarr;</span>
@@ -65,13 +65,13 @@
       </template>
       <template #tbody>
         <vs-tr
-        :key="i"
-            v-for="(tr, i) in users"
+            v-for="tr in users"
+            :key="tr.id"
             :data="tr"
-            :class="isChecked(tr.id) ? 'table-primary' : ''"
+            :class="isSelected(tr.id) ? 'table-primary' : ''"
         >
-        <vs-td checkbox>
-          <vs-input type="checkbox" :val="tr.id" v-model="selected"/>
+        <vs-td>
+          <vs-checkbox :val="tr.id" v-model="selected"></vs-checkbox>
             </vs-td>
           <vs-td>
           {{ tr.id }}
@@ -185,36 +185,22 @@ export default {
     UserDetail
   },
   watch: {
-    allCheck : function(){
-      if (this.allCheck==true){
-        this.users.forEach(user=>{
-          this.selected=[];
-          this.selected.push(user.id)
-        });
-
-        
-      }
-    },
     selectPage: function(value){
             this.selected = [];
             if(value){
-                this.data.data.forEach(user => {
-                    this.selected.push(user.id);
-                });
+              this.getAllUser()
             }else{
                 this.selected = [];
-                this.selectAll = false;
             }
+            console.log(value)
         },
        
-    // selected: function(value){
-    //   this.url = "/api/admin/export/" + this.selected;
-    // },
   },
   methods: {
     ...mapActions('user', {
       getUsers: 'getUsers',
       getUser: 'getUser',
+      getAll: 'getAll',
       createUser: 'createUser',
       updateUser: 'updateUser',
       deleteUser: 'deleteUser',
@@ -273,6 +259,17 @@ export default {
       this.data = users.data
       this.users=users.data.data
     },
+    async getAllUser(){
+      const data={
+        page:this.page,
+        sort_direction:this.sort_direction,
+        sort_field:this.sort_field,
+        search:this.searchFilter
+      }
+      this.selected=[]
+      const dataUser=await this.getAll(data)
+      this.selected=dataUser.data
+    },
     change_sort(field){
       if(this.sort_field == field){
           this.sort_direction = this.sort_direction == "asc" ? "desc" : "asc";
@@ -282,7 +279,7 @@ export default {
       this.fetchUsers()    
           
         },
-    isChecked(user_id){
+    isSelected(user_id){
             return this.selected.includes(user_id);
         },
     async getCheckAll(){
@@ -300,7 +297,8 @@ export default {
         
       
     async onSearch() {
-      await this.searchUser({ email: this.searchFilter })
+      // await this.searchUser({ email: this.searchFilter })
+      this.fetchUsers()   
     },
     async onExport(){
       

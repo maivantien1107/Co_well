@@ -9,8 +9,11 @@ const getters = {}
 const mutations = {}
 
 const actions = {
-  getUsers(commit, page) {
-    return userServices.getUsers(page)
+  getUsers(commit, data) {
+    return userServices.getUsers(data)
+  },
+  getAll(commit,data){
+    return userServices.getAll(data)
   },
   getUser(commit, userId) {
     return userServices.getUser(userId)

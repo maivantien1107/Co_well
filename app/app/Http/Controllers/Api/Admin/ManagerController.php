@@ -54,9 +54,9 @@ class ManagerController extends BaseController
                 'users.updated_at',
                 'phone_verified_at',
             ])
+            ->whereRaw('match(email,users.name,phone) against(?)', array($search))
             ->join('role_users','users.id','=','user_id')
             ->join('roles','role_id','=','roles.id')
-            ->whereRaw('match(email,users.name,phone) against(?)', array($search))
             ->orderBy($sort_field,$sort_direction)
            ->paginate(10);
         }
@@ -198,7 +198,39 @@ class ManagerController extends BaseController
 
         return $this->withSuccessMessage('User has been deleted!');
     }
+    public function getAll(){
+        $sort_direction = request('sort_direction','desc');
+        if(!in_array($sort_direction,['asc','desc'])){
+            $sort_direction = 'desc';
+        }
+        $sort_field = request('sort_field','id');
+        $sort_field="users.".''.$sort_field;
+        if (!in_array($sort_field,['users.name','users.email','users.id','users.phone'])){
+            $sort_field='users.id';
+        }
+        $search=request('search','');
+        if ($search){
+            $users = User::select([
+                'users.id',
+            ])
+            ->whereRaw('match(email,users.name,phone) against(?)', array($search))
+            ->orderBy($sort_field,$sort_direction)
+           ->get();
+        }
+        else{
+            $users = User::select([
+                'users.id',
+            ])
+            ->orderBy($sort_field,$sort_direction)
+           ->get();
+        }
+        $idArr=[];
+        foreach($users as $user){
+            $idArr[]=$user->id;
 
+        }
+        return $this->withData($idArr, 'Chọn tất cả thành công');
+    }
     
     public function checkValidatedMail($email)
     {
@@ -216,8 +248,8 @@ class ManagerController extends BaseController
         if ($validated->fails()) {
             return $this->failValidator($validated);
         }
-        $users=User::whereRaw('match(email,name,phone) against(?)', array($request['email']))
-                    ->paginate(10);
+        $users=User::whereRaw('match(name,email,phone) against(?)', array($request['email']))
+                    ->get();
         return $this->withData($users, 'Search done');
     }
     public function export($users) 

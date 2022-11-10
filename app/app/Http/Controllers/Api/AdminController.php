@@ -196,145 +196,16 @@ class AdminController extends BaseController
     
     }
 
-    public function forgetPassword(Request $request)
+
+    public function mailsend()
     {
-        $validated = Validator::make($request->all(), [
-            'phone' => 'string|required|max:12',
-        ]);
+        $details = [
+            'title' => 'Title: Mail from Real Programmer',
+            'body' => 'Body: This is for testing email using smtp'
+        ];
 
-        if ($validated->fails()) {
-            return $this->failValidator($validated);
-        }
-        $customer = $this->user->where('phone', $request['phone'])->where('is_verified', 1)->first() ?? null;
-        if ($customer) {
-            $token = getenv("TWILIO_AUTH_TOKEN");
-            $twilio_sid = getenv("TWILIO_SID");
-            $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
-            $twilio = new Client($twilio_sid, $token);
-            try {
-                $twilio->verify->v2->services($twilio_verify_sid)
-                    ->verifications
-                    ->create($request['phone'], "sms");
-            }
-            catch (\Exception $e) {
-                return $this->sendError('Số điện thoại không hợp lệ');
-            }
-        } else {
-            return $this->sendError("số điện thoại này chưa được đăng ký");
-        }
-
-        return $this->withSuccessMessage("Chúng tôi đã gửi mã xác nhận đến số điện thoại của bạn!");
+        \Mail::to('maitien6534@gmail.com')->send(new MailOTP($details));
     }
-
-    public function verifiedPhone(Request $request)
-    {
-        $validated = Validator::make($request->all(), [
-            'code'=>'required|min:6|max:6',
-            'phone' => 'required|unique:users,phone|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20',
-        ]);
-        // if ($validated->fails()) {
-        //     return $this->failValidator($validated);
-        // }
-        try {
-           $user=User::where('phone', $request['phone'])->first();
-           $code=UserCode::where('user_id',$user->id)->first();
-           if ($code->code==$request['code']){
-            $user = tap(User::where('phone', $request['phone']))->update([
-                'is_verified' => true,
-                'phone_verified_at' => Carbon::now(),
-            ]);
-            return $this->withSuccessMessage('Mã xác nhận chính xác!');
-           }
-        }
-        catch (Exception $e) {
-            return $this->sendError("The code is incorrect or has been used!");
-        }
-        return $this->sendError('Mã xác nhận không chính xác!');
-    }
-
-    public function newPassword (Request $request)
-    {
-        $validated = Validator::make($request->all(), [
-            'phone' => 'regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20',
-            'newPassword' => 'required|max:255',
-        ]);
-        if ($validated->fails()) {
-            return $this->failValidator($validated);
-        }
-        $customer = $this->user->where('phone', $request['phone'])->firstOrFail();
-        $customer->password = Hash::make($request['newPassword']);
-        $customer->save();
-
-        return $this->withSuccessMessage("Đổi mật khẩu thành công!");
-    }
-
-    public function changePassword(Request $request)
-    {
-        $validated = Validator::make($request->all(), [
-            'oldPassword' => 'required|max:255',
-            'newPassword' => 'required|max:255',
-        ]);
-        if ($validated->fails()) {
-            return $this->failValidator($validated);
-        }
-        $customer = Auth()->user();
-        if (!password_verify($request['oldPassword'], $customer->password))
-        {
-            return $this->sendError('Mật khẩu cũ không chính xác!');
-        }
-        $customerUpdatePassword = $customer->update([
-            'password' => Hash::make($request['newPassword']),
-        ]);
-        if ($customerUpdatePassword) {
-            $this->logout();
-        }
-
-        return $this->withSuccessMessage('Đổi mật khẩu thành công!');
-
-    }
-
-    public function addMail(Request $request)
-    {
-        $uniqueEmail = Customer::where('email', $request->email)->whereNotNull('email_verified_at') ->first() ?? null;
-        if (!empty($uniqueEmail)) {
-            return $this->sendError("Email này đã được sử dụng");
-        }
-        $checkMailValid = $this->checkValidatedMail($request->email);
-        if (!$checkMailValid) {
-            return $this->sendError('email không hợp lệ!');
-        }
-        $customer = Auth::user();
-        $customer->update([
-            'email' => $request->email,
-        ]);
-        $token =Str::random(60);
-        $passwordReset = PasswordReset::updateOrCreate([
-            'email' => $customer->email,
-            'token' => $token,
-        ]);
-        $sendMail = $customer->notify(new CustomerAddEmail($token));
-
-        return $this->withSuccessMessage('Chúng tôi đã gửi link xác thực đến email của bạn!');
-    }
-
-    public function customerActiveMail($token)
-    {
-        $customerActiveMail = PasswordReset::where('token', $token)->firstOrFail();
-        if (Carbon::parse($customerActiveMail->updated_at)->addMinutes(720)->isPast()) {
-            $customerActiveMail->delete();
-            return response()->json([
-                'message' => 'Token hết hạn.',
-            ], 422);
-        }
-
-        $customer = Customer::where('email', $customerActiveMail->email)->firstOrFail();
-        $customer->update([
-            'email_verified_at' => Carbon::now(),
-        ]);
-
-        return $this->withSuccessMessage("Thêm email thành công!");
-    }
-
     public function checkValidatedMail($email)
     {
         $sender    = 'namxuanhoapro@gmail.com';

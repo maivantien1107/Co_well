@@ -10,9 +10,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class MailOTP extends Mailable
 {
     use Queueable, SerializesModels;
-
+  
     public $details;
-
+   
     /**
      * Create a new message instance.
      *
@@ -22,7 +22,7 @@ class MailOTP extends Mailable
     {
         $this->details = $details;
     }
-
+   
     /**
      * Build the message.
      *

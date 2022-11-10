@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,5 +23,5 @@ Route::get('{any}', function () {
 })->where('any', '.*');
 
 Auth::routes();
-
+Route::get('send-mail',[AdminController::class,'mailsend']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
