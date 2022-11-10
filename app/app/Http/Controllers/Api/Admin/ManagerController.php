@@ -28,25 +28,60 @@ class ManagerController extends BaseController
      */
     public function index()
     {
-        $users = User::select([
-            'users.id',
-            'users.name',
-            'email',
-            'phone',
-            'sex',
-            'users.permissions',
-            'roles.name AS role_name',
-            'role_id',
-            'last_login',
-            'phone_verified_at',
-            'users.created_at',
-            'users.updated_at',
-            'phone_verified_at',
-        ])
-        ->join('role_users','users.id','=','user_id')
-        ->join('roles','role_id','=','roles.id')
-        ->orderBy('users.id','desc')
-        ->paginate(10);
+        $sort_direction = request('sort_direction','desc');
+        if(!in_array($sort_direction,['asc','desc'])){
+            $sort_direction = 'desc';
+        }
+        $sort_field = request('sort_field','id');
+        $sort_field="users.".''.$sort_field;
+        if (!in_array($sort_field,['users.name','users.email','users.id','users.phone'])){
+            $sort_field='roles.name';
+        }
+        $search=request('search','');
+        if ($search){
+            $users = User::select([
+                'users.id',
+                'users.name',
+                'email',
+                'phone',
+                'sex',
+                'users.permissions',
+                'roles.name AS role_name',
+                'role_id',
+                'last_login',
+                'phone_verified_at',
+                'users.created_at',
+                'users.updated_at',
+                'phone_verified_at',
+            ])
+            ->join('role_users','users.id','=','user_id')
+            ->join('roles','role_id','=','roles.id')
+            ->whereRaw('match(email,users.name,phone) against(?)', array($search))
+            ->orderBy($sort_field,$sort_direction)
+           ->paginate(10);
+        }
+        else{
+            $users = User::select([
+                'users.id',
+                'users.name',
+                'email',
+                'phone',
+                'sex',
+                'users.permissions',
+                'roles.name AS role_name',
+                'role_id',
+                'last_login',
+                'phone_verified_at',
+                'users.created_at',
+                'users.updated_at',
+                'phone_verified_at',
+            ])
+            ->join('role_users','users.id','=','user_id')
+            ->join('roles','role_id','=','roles.id')
+            ->orderBy($sort_field,$sort_direction)
+           ->paginate(10);
+        }
+        
         return $this->withData($users, 'List User');
     }
 
