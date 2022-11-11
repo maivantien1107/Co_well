@@ -26,6 +26,6 @@ export default {
     return axios.put(`api/user/change-password-profile`, data)
   },
   exportUser(data){
-    return axios.get(`api/admin/export/${data}`)
+    return axios.get(`api/admin/export`,data)
   }
 }

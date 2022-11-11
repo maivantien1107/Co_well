@@ -1,6 +1,5 @@
 <template>
     <div class="customer-detail">
-      <vs-input class="mb-2 w-1/6" label="ID" placeholder="id" v-if="user.id" :value="user.id" disabled />
       <vs-input class="mb-3 w-full" label="Tên" placeholder="Tên" v-model="user.name" />
       <vs-row>
         <label class="ml-1">Giới tính:</label>
@@ -15,8 +14,20 @@
         </div>
       </vs-row>
     <br>
-      <vs-input class="mb-4 mt-2 w-full" label="Số điện thoại" placeholder="Số điện thoại" v-model="user.phone" />
-      <vs-input class="mb-4 mt-2 w-full" label="Email" placeholder="Email" v-model="user.email" />
+      <vs-input class="mb-4 mt-2 w-full" label="Số điện thoại" placeholder="Số điện thoại" v-model="user.phone"  type="text">
+        <template v-if="user.phone !== ''" #message-success>
+        </template>
+        <template v-if="user.phone === ''" #message-danger>
+          Phone Invalid
+        </template>
+      </vs-input>
+      <vs-input class="mb-4 mt-2 w-full" label="Email" placeholder="Email" v-model="user.email">
+        <template v-if="validEmail" #message-success>
+        </template>  
+        <template v-if="!validEmail && user.email !== ''" #message-danger>
+          Email Invalid
+        </template>
+      </vs-input>
       <vs-checkbox class="mb-4" v-if="user.id" v-model="user.is_verified" disabled>Đã xác thực</vs-checkbox>
       <vs-input
         class="mb-4 w-full"
@@ -24,7 +35,14 @@
         placeholder="Mật khẩu"
         v-if="!user.id"
         v-model="user.password"
-      />
+      >
+      <template v-if="user.password !== ''" #message-success>
+        </template>
+      <template v-if="user.password === ''" #message-danger>
+          Password Invalid
+        </template>
+    
+    </vs-input>
       <vs-row>
         <label class="ml-1">Loại tài khoản:</label>
         <div v-for="(name, index) of userType" :key="index" >
@@ -67,7 +85,12 @@
       }
     },
     methods: {
-    }
+    },
+    computed: {
+        validEmail() {
+          return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.user.email)
+        }
+      }
   }
   </script>
   <style lang="scss" scoped>

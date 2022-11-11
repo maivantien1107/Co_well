@@ -18,7 +18,7 @@ class TestSeeder extends Seeder
     public function run()
     {
         \App\Models\User::factory()
-        ->count(200)
+        ->count(30)
         ->create();
         echo ('add role');
         $users=User::where('id','>',3)->get();

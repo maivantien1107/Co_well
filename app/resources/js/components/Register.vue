@@ -1,87 +1,142 @@
 <template>
-    <div class="container h-100">
-        <div class="row h-100 align-items-center">
-            <div class="col-12 col-md-6 offset-md-3">
-                <div class="card shadow sm">
-                    <div class="card-body">
-                        <h1 class="text-center">Register</h1>
-                        <hr/>
-                        <form action="javascript:void(0)" @submit="register" class="row" method="post">
-                            <div class="col-12" v-if="Object.keys(validationErrors).length > 0">
-                                <div class="alert alert-danger">
-                                    <ul class="mb-0">
-                                        <li v-for="(value, key) in validationErrors" :key="key">{{ value[0] }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group col-12">
-                                <label for="name" class="font-weight-bold">Name</label>
-                                <input type="text" name="name" v-model="user.name" id="name" placeholder="Enter name" class="form-control">
-                            </div>
-                            <div class="form-group col-12 my-2">
-                                <label for="email" class="font-weight-bold">Email</label>
-                                <input type="text" name="email" v-model="user.email" id="email" placeholder="Enter Email" class="form-control">
-                            </div>
-                            <div class="form-group col-12">
-                                <label for="password" class="font-weight-bold">Password</label>
-                                <input type="password" name="password" v-model="user.password" id="password" placeholder="Enter Password" class="form-control">
-                            </div>
-                            <div class="form-group col-12 my-2">
-                                <label for="password_confirmation" class="font-weight-bold">Confirm Password</label>
-                                <input type="password_confirmation" name="password_confirmation" v-model="user.password_confirmation" id="password_confirmation" placeholder="Enter Password" class="form-control">
-                            </div>
-                            <div class="col-12 mb-2">
-                                <button type="submit" :disabled="processing" class="btn btn-primary btn-block">
-                                    {{ processing ? "Please wait" : "Register" }}
-                                </button>
-                            </div>
-                            <div class="col-12 text-center">
-                                <label>Already have an account? <router-link :to="{name:'login'}">Login Now!</router-link></label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <!-- new -->
+    <div>
+      <div class="knd-form">
+          <!-- input -->
+          <div class="knd-form-x">
+              <h3>Register Form</h3>
+              <div class="knd-form-field">
+                  <vs-input type="string" label="Username" v-model="username" placeholder="YourEmail@gmail.com">
+                  </vs-input>
+              </div>
+  
+         <!-- password -->
+              <div class="knd-form-field">
+                  <vs-input type="password" label="Password" v-model="password" label-placeholder="Password"
+  
+                  :visiblePassword="hasVisiblePassword"
+                  icon-after
+                  @click-icon="hasVisiblePassword = !hasVisiblePassword">
+                      <template #icon>
+                      <i v-if="!hasVisiblePassword" class='bx bx-show-alt'></i>
+                      <i v-else class='bx bx-hide'></i>
+                      </template>
+                  </vs-input>
+              </div>
+  
+              <div class="knd-field-group">
+              <vs-button @click="onRegister()" >Register</vs-button>
+              </div>
+              <span>Do you have an account?<router-link to="/signup"> <a >Sign in</a></router-link></span>
+  
+          </div>
+  
+      </div>
+      <vs-dialog width="550px" not-center v-model="isEnterCode">
+        <div class="con-content">
+          <p>
+            Ma xac nhan cua ban la?
+          </p>
+          <vs-input type="string" label="OTP" v-model="otp" placeholder=""></vs-input>
         </div>
-    </div>
-</template>
 
+        <template #footer>
+          <div class="con-footer">
+            <vs-button @click="onVerify()" transparent>
+              Xac nhan
+            </vs-button>
+            <vs-button  @click="isEnterCode=false" dark transparent>
+              Cancel
+            </vs-button>
+          </div>
+        </template>
+</vs-dialog>
+    </div>
+
+</template>
 <script>
-export default {
-    name:'register',
-    data(){
-        return {
-            user:{
-                name:"",
-                email:"",
-                password:"",
-                password_confirmation:""
-            },
-            validationErrors:{},
-            processing:false
-        }
+  import { mapActions } from 'vuex'
+  export default {
+    name: 'Login',
+    data() {
+      return {
+        isEnterCode:false,
+        otp:null,
+        username: null,
+        password: null,
+        isResetPassword: false,
+        hasVisiblePassword: false
+      }
     },
-    methods:{
-        ...mapActions({
-            signIn:'auth/login'
-        }),
-        async register(){
-            this.processing = true
-            await axios.get('/sanctum/csrf-cookie')
-            await axios.post('/register',this.user).then(response=>{
-                this.validationErrors = {}
-                this.signIn()
-            }).catch(({response})=>{
-                if(response.status===422){
-                    this.validationErrors = response.data.errors
-                }else{
-                    this.validationErrors = {}
-                    alert(response.data.message)
-                }
-            }).finally(()=>{
-                this.processing = false
-            })
+    methods: {
+      ...mapActions('auth', {
+        login: 'login',
+        verifyotp:'verifyotp',
+        resetPassword: 'resetPassword'
+      }),
+      async onLogin() {
+        this.isEnterCode=true;
+        const customer={
+          username:this.username,
+          password:this.password
         }
+        const res = await this.login(customer)
+      if (res) {
+        this.isEnterCode = true
+      }
+     
+      },
+      async onVerify(){
+        const res = await this.verifyotp({
+        username: this.username,
+       otp:this.otp
+      })
+      if (res) {
+        this.isEnterCode = false
+        this.$router.push('/admin-user')
+      }
+      },
+    },
+    created() {
+      if (this.$store.state.auth.token || localStorage.getItem('tokenAdmin')) this.$router.push('/dashboard')
+    },
+    computed: {
+        validEmail() {
+          return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)
+        },
+      }
+  }
+  </script> 
+
+<style>
+    .knd-form{
+        height: 80vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-}
-</script>
+    .knd-form-field {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+    .knd-form-x {
+        padding: 1.25rem;
+        background-color: aquamarine;
+    }
+    .vs-input {
+        width: 400px !important;
+    }
+    .knd-field-group {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        margin-top: 0.50rem;
+    }
+    .knd-field-group a{
+        text-decoration: none !important;
+        text-transform: capitalize;
+        margin-left: 0.25rem;
+        cursor: pointer;
+    }
+</style>

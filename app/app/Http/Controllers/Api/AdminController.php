@@ -153,7 +153,7 @@ class AdminController extends BaseController
       
     }
     public function authOTP(OTPRequest $request){
-        $user=User::where('username',$request->username)->first();
+        $user=User::where('phone',$request->username)->first();
          $verificationOTP=VerificationLogin::where('user_id',$user->id)->where('otp',$request->otp)->latest()->first();
          $now=Carbon::now();
          if(!$verificationOTP){
@@ -171,7 +171,7 @@ class AdminController extends BaseController
         ]);
         $credentials=[
             'password'=>$verificationOTP->verify,
-            'username'=>$request->username,
+            'phone'=>$request->username,
         ];
         $token=JWTAuth::attempt($credentials);
         if($user->is_verified==0){

@@ -54,7 +54,7 @@ class ManagerController extends BaseController
                 'users.updated_at',
                 'phone_verified_at',
             ])
-            ->whereRaw('match(email,users.name,phone) against(?)', array($search))
+            ->whereRaw('match(email,users.name) against(?)', array($search))
             ->join('role_users','users.id','=','user_id')
             ->join('roles','role_id','=','roles.id')
             ->orderBy($sort_field,$sort_direction)
@@ -103,20 +103,17 @@ class ManagerController extends BaseController
         if ($validated->fails()) {
             return $this->failValidator($validated);
         }
-        // $checkMailValid = $this->checkValidatedMail($request['email']);
-        // if (!$checkMailValid) {
-        //     return $this->sendError('This email is not valid!');
-        // }
             $user = $this->user->create([
                 'name' => $request['name'],
                 'email' => $request['email'],
-                'password' => Hash::make($request['phone']),
+                'password' => Hash::make($request['password']),
                 'sex' => $request['sex'],
-                'phone'=>$request['phone']
+                'phone'=>$request['phone'],
+                'username'=>$request['phone']
             ]);
             $user->roles()->attach($request['role_id']);
 
-        return $this->withData($user, 'Create user successfully!', 201);
+        return $this->withData($user, 'Create user successfully!', 200);
     }
 
     /**
@@ -191,9 +188,9 @@ class ManagerController extends BaseController
     public function destroy($id)
     {
         $user = $this->user->findOrFail($id);
-        if ($this->user->getType($user->id) == 'superadmin' || Auth::user()->id == $id) {
-            return $this->unauthorizedResponse();
-        }
+        // if ($this->user->getType($user->id) == 'superadmin') {
+        //     return $this->unauthorizedResponse();
+        // }
         $user->delete();
 
         return $this->withSuccessMessage('User has been deleted!');
@@ -213,7 +210,7 @@ class ManagerController extends BaseController
             $users = User::select([
                 'users.id',
             ])
-            ->whereRaw('match(email,users.name,phone) against(?)', array($search))
+            ->whereRaw('match(email,users.name) against(?)', array($search))
             ->orderBy($sort_field,$sort_direction)
            ->get();
         }
@@ -252,10 +249,9 @@ class ManagerController extends BaseController
                     ->get();
         return $this->withData($users, 'Search done');
     }
-    public function export($users) 
+    public function export(Request $request) 
     {
-        $usersArray = explode(',',$users);
-        $results= (new UsersExport($usersArray))->download('users.xlsx');
+        $results= (new UsersExport($request))->download('users.xlsx');
         if ($results){
             return $this->withSuccessMessage('export thanh cong');
         }

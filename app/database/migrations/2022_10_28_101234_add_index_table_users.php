@@ -13,7 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE users ADD FULLTEXT search(name,email,phone)');
+        // DB::statement('DROP FULLTEXT INDEX ON users');
+        DB::statement('ALTER TABLE users ADD FULLTEXT search1(name,email)');
+        DB::statement('ALTER TABLE roles ADD FULLTEXT search(slug)');
     }
 
     /**
@@ -23,6 +25,7 @@ return new class extends Migration
      */
     public function down()
     {
-        DB::statement('ALTER TABLE users DROP INDEX search');
+        DB::statement('ALTER TABLE users DROP INDEX search1');
+        DB::statement('ALTER TABLE roles DROP INDEX search');
     }
 };

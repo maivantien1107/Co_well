@@ -30,23 +30,25 @@ Route::post('/verify-phone', [UserController::class,'verifiedPhone'])->name('use
 Route::get('/active-email/{token}', [UserController::class,'customerActiveMail'])->name('user.active-email');
 
 //manager admin
-Route::get('/admin/export/{data}', [ManagerController::class, 'export']);
-Route::get('/admin/search',[ManagerController::class ,'search'])->name('user.search');
+// Route::get('/admin/export/{data}', [ManagerController::class, 'export']);
+// Route::get('/admin/search',[ManagerController::class ,'search'])->name('user.search');
 Route::get('admin/sendMail',[AdminController::class, 'mailsend'])->name('user.sendmail');
-Route::get('/admin',[ManagerController::class ,'index'])->name('user.index');
+// Route::get('/admin',[ManagerController::class ,'index'])->name('user.index');
 Route::get('/admin/getAll',[ManagerController::class ,'getAll'])->name('user.getAll');
-Route::get('/admin/{id}',[ManagerController::class ,'show'])->name('user.show');
-Route::post('/admin/create-user',[ManagerController::class ,'store']);
-Route::put('/admin/update-user/{id}',[ManagerController::class ,'update']);
-Route::delete('/admin/delete/{id}',[ManagerController::class ,'destroy']);
+// Route::get('/admin/{id}',[ManagerController::class ,'show'])->name('user.show');
+// Route::post('/admin/create-user',[ManagerController::class ,'store']);
+// Route::put('/admin/update-user/{id}',[ManagerController::class ,'update']);
+// Route::delete('/admin/delete/{id}',[ManagerController::class ,'destroy']);
+Route::get('/admin/export/', [ManagerController::class, 'export']);
 Route::middleware(['jwt.auth','admin'])->group(function(){
 
-    // Route::get('/admin',[ManagerController::class ,'index'])->name('user.index');
-    // Route::get('/admin/{id}',[ManagerController::class ,'show'])->name('user.show');
-    // Route::post('/admin/create-user',[ManagerController::class ,'store'])->middleware('superadmin')->name('user.store');
-    // Route::put('/admin/update-user/{id}',[ManagerController::class ,'update'])->middleware('superadmin')->name('user.update');
-    // Route::delete('/admin/delete/{id}',[ManagerController::class ,'destroy'])->middleware('superadmin')->name('user.destroy');
-  
+    Route::get('/admin',[ManagerController::class ,'index'])->name('user.index');
+    Route::get('/admin/{id}',[ManagerController::class ,'show'])->name('user.show');
+    Route::post('/admin/create-user',[ManagerController::class ,'store'])->middleware('superadmin')->name('user.store');
+    Route::put('/admin/update-user/{id}',[ManagerController::class ,'update'])->middleware('superadmin')->name('user.update');
+    Route::delete('/admin/delete/{id}',[ManagerController::class ,'destroy'])->middleware('superadmin')->name('user.destroy');
+    Route::get('/admin/export/{data}', [ManagerController::class, 'export']);
+    Route::get('/admin/search',[ManagerController::class ,'search'])->name('user.search');
     // Route::apiResource('user',ManagerController::class);
    
 });
