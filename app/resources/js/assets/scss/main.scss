@@ -1,0 +1,118 @@
+// @import './fixVuesax';
+// @import './fixMapbox';
+// @import './reset';
+// @import './variables';
+// @import './common.scss';
+$primary-color: #ea001f;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    line-height: 1.6rem;
+    font-family: 'Lato', sans-serif;
+  }
+  body {
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .vs-col, .vs-row{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.vs-select--label{
+    color: #666 !important;
+}
+.vuesax-app-is-ltr .vs-table--search-input {
+    border: 2px solid #ccc !important;
+}
+.mapboxgl-ctrl-bottom-right{
+    display: none;
+}
+.mapboxgl-ctrl-bottom-left{
+    display: none;
+}
+#map {
+    height: 500px !important;
+    margin-bottom: 50px !important;
+}
+.mapboxgl-ctrl-top-right{
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between;
+}
+.mapboxgl-ctrl-geocoder {
+    margin-top: 0 !important;
+}
+@keyframes wipe-enter {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes height-top-bottom {
+    0% {
+      transform: scale(1, 0);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
+  @keyframes height-bottom-top {
+    0% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .animation-from-center-top {
+      animation: wipe-enter 1.25s 1;
+    }
+    .animation-height-show {
+      animation: height-top-bottom 0.15s linear 1;
+    }
+    .animation-height-hidden {
+      animation: height-top-bottom 0.15s linear 1;
+    }
+  }
+  .collapsing {
+    height: 0;
+    position: relative;
+    overflow: hidden;
+    transition: height 0.35s ease;
+  }
+  
+  //overlay background
+  .overlay {
+    background-image: linear-gradient(0deg, rgba(41, 45, 69, 0.8), rgba(12, 12, 15, 0.6));
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: -1;
+    position: absolute;
+  }
+  
+  //font-default-promo
+  .font-oswald{
+    font-family: 'Oswald', sans-serif !important;
+  }
+  
+  //filter
+  .drop-shadow-img {
+    filter: drop-shadow(2px 4px 6px gray) ;
+  }
+  .drop-shadow-container {
+    filter: drop-shadow(1px 2px 3px gray) ;
+  }
+  
+
+//Font
+@import url('https://fonts.googleapis.com/css2?family=Akshar&family=Oswald:wght@300&display=swap');

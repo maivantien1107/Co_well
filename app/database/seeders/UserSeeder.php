@@ -4,10 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserSeeder extends Seeder
 {
@@ -41,19 +40,32 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => fake()->name(),
+                'phone' => fake()->phoneNumber(),
+                'username'=>fake()->name(),
+                'sex'=>'1',
+                'username'=>fake()->name(),
                 'email' => 'admin@example.com',
             ],
             [
                 'name' => fake()->name(),
-                'email' => 'superadmin@example.com',
+                'phone' => fake()->phoneNumber(),
+                'username'=>fake()->name(),
+                'sex'=>'1',
+                'username'=>fake()->name(),
+                'email' => 'super@example.com',
             ],
             [
                 'name' => fake()->name(),
+                'phone' => fake()->phoneNumber(),
+                'username'=>fake()->name(),
+                'sex'=>'1',
+                'username'=>fake()->name(),
                 'email' => 'user@example.com',
             ],
         ];
 
         foreach ($users as $userItem) {
+            // $user  =  \App\Models\User::factory()->create($userItem);
             $userItem['password'] = '1234567@';
             $user = Sentinel::registerAndActivate($userItem);
             switch ($userItem['email']) {

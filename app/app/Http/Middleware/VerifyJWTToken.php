@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+
 
 class VerifyJWTToken
 {
@@ -16,7 +17,7 @@ class VerifyJWTToken
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next, $role='user')
     {
         try {
             $user = JWTAuth::toUser($request->input('token'));
@@ -29,6 +30,7 @@ class VerifyJWTToken
                 return response()->json(['error'=>'Token is required']);
             }
         }
+        // return response()->json(['error'=>'Không có quyền truy cập']);
         return $next($request);
     }
 }

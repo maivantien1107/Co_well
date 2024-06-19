@@ -8,16 +8,18 @@
         "php": "^8.0.2",
         "cartalyst/sentinel": "^6.0",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/framework": "^9.19",
-        "laravel/sanctum": "^2.8",
+        "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "tightenco/ziggy": "^1.0",
-        "tomfordrumm/jwt-auth": "dev-develop"
+        "laravel/ui": "^4.0",
+        "maatwebsite/excel": "^3.1",
+        "psr/simple-cache": "^2.0",
+        "tomfordrumm/jwt-auth": "dev-develop",
+        "twilio/sdk": "^6.42",
+        "zytzagoo/smtp-validate-email": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "laravel/breeze": "^1.14",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
@@ -30,7 +32,12 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+
+            "helpers/functions.php"
+
+        ]
     },
     "autoload-dev": {
         "psr-4": {
